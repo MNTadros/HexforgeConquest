@@ -1,0 +1,30 @@
+[gd_scene load_steps=4 format=3 uid="uid://c7yaq4qdg2q5u"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_axrvq"]
+sky_top_color = Color(0.411765, 0.658824, 1, 1)
+sky_horizon_color = Color(0.74902, 0.87451, 1, 1)
+
+[sub_resource type="Sky" id="Sky_qjtc6"]
+sky_material = SubResource("ProceduralSkyMaterial_axrvq")
+
+[sub_resource type="Environment" id="Environment_7gy3m"]
+background_mode = 2
+background_energy_multiplier = 0.7
+sky = SubResource("Sky_qjtc6")
+ambient_light_color = Color(0.975043, 0.962268, 1, 1)
+ambient_light_energy = 0.6
+glow_enabled = true
+
+[node name="LightingSetup" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.707193, 0.499867, -0.500011, -0.000161743, 0.707323, 0.706891, 0.707021, -0.499827, 0.500294, 0, 0, 0)
+light_color = Color(1, 0.902369, 0.867058, 1)
+light_energy = 2.0
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_7gy3m")
+
+[node name="ReflectionProbe" type="ReflectionProbe" parent="."]
+transform = Transform3D(1, -0.000101647, 0.000121746, 0.000101683, 1, -0.000330422, -0.000121716, 0.000330433, 1, 0, 0, 0)

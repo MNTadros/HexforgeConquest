@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://dk5jrtp4usd6u"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_wsveh"]
+
+[node name="TileBar" type="HBoxContainer"]
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+label_settings = SubResource("LabelSettings_wsveh")
+horizontal_alignment = 3
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+max_value = 10.0
+value = 10.0

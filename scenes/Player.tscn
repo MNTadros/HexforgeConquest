@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://csow1ae46qydu"]
+
+[ext_resource type="Script" uid="uid://bm0t5us7ul58y" path="res://scripts/Player.gd" id="1_wr5hl"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_o8nba"]
+radius = 0.15
+height = 0.8
+
+[node name="CharacterBody3D" type="CharacterBody3D"]
+script = ExtResource("1_wr5hl")
+
+[node name="Head" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.736859, 0.0460157)
+fov = 71.3506
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.00072, 0, 0, 0, 1.00072, 0, 0, 0, 1.00072, 0, 0.428806, 0)
+shape = SubResource("CapsuleShape3D_o8nba")
+debug_color = Color(0.624236, 0.397735, 0.901997, 0.42)
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.498029, 0)
