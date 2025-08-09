@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dfwyqq3yt5gnj" path="res://scripts/hud.gd" id="1_fls4u"]
 [ext_resource type="PackedScene" uid="uid://dk5jrtp4usd6u" path="res://scenes/TileBar.tscn" id="2_7hsmw"]
-[ext_resource type="PackedScene" uid="uid://b75wc71nso5nu" path="res://scenes/PauseMenu.tscn" id="3_1etfg"]
+[ext_resource type="PackedScene" uid="uid://cgchdphv6dtys" path="res://scenes/PauseMenu.tscn" id="4_7hsmw"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_fls4u")
@@ -31,6 +31,4 @@ offset_top = -141.56
 offset_right = 206.488
 offset_bottom = 141.44
 
-[node name="PauseMenu" parent="." instance=ExtResource("3_1etfg")]
-process_mode = 2
-visible = true
+[node name="PauseMenu" parent="." instance=ExtResource("4_7hsmw")]
