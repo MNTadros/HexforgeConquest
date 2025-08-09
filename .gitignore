@@ -5,6 +5,7 @@
 # Exclude all assets by default
 Assets/
 addons/kaykit_medieval_hexagon_pack/Assets/
+addons/kenny_hexagons/
 
 # Include only the assets actually used in the game
 # From Assets/gltf/
@@ -12,44 +13,57 @@ addons/kaykit_medieval_hexagon_pack/Assets/
 !Assets/gltf/floor_tile_small_weeds_A.gltf.glb
 !Assets/gltf/wall_arched.gltf.glb
 !Assets/gltf/box_small_decorated.gltf.glb
+!Assets/gltf/wall.gltf.glb
+!Assets/gltf/wall_corner_small.gltf.glb
 
 # From Assets/obj/
 !Assets/obj/stairs.obj
 !Assets/obj/box_small_decorated.obj
 
-# From kaykit_medieval_hexagon_pack - only used assets
-!addons/kaykit_medieval_hexagon_pack/Assets/obj/tiles/base/hex_grass.obj
-!addons/kaykit_medieval_hexagon_pack/Assets/obj/buildings/blue/building_archeryrange_blue.obj
-!addons/kaykit_medieval_hexagon_pack/Assets/obj/tiles/base/hex_grass_sloped_low.obj
-!addons/kaykit_medieval_hexagon_pack/Assets/obj/tiles/base/hex_grass_sloped_high.obj
-!addons/kaykit_medieval_hexagon_pack/Assets/obj/decoration/props/resource_lumber.obj
-!addons/kaykit_medieval_hexagon_pack/Assets/obj/decoration/props/sack.obj
-!addons/kaykit_medieval_hexagon_pack/Assets/obj/buildings/red/building_mine_red.obj
-!addons/kaykit_medieval_hexagon_pack/Assets/obj/decoration/props/resource_stone.obj
+# From kenny_hexagons pack
+!addons/kenny_hexagons/kenney_hexagon-kit/Models/GLB format/dirt.glb
 
-# GLTF assets from kaykit pack
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/tiles/base/hex_grass_bottom.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/hills_A.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/hills_B_trees.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/tiles/base/hex_grass.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/props/flag_red.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/hills_A_trees.gltf
+# From kaykit_medieval_hexagon_pack - buildings
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/buildings/yellow/building_barracks_yellow.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/buildings/neutral/building_dirt.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/buildings/neutral/wall_straight.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/buildings/neutral/wall_straight_gate.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/buildings/neutral/wall_corner_B_outside.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/buildings/neutral/building_grain.gltf
 !addons/kaykit_medieval_hexagon_pack/Assets/gltf/buildings/blue/building_archeryrange_blue.gltf
 !addons/kaykit_medieval_hexagon_pack/Assets/gltf/buildings/red/building_mine_red.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/waterlily_A.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/mountain_C_grass_trees.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/tiles/base/hex_grass_sloped_low.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/mountain_B.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/buildings/neutral/building_grain.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/cloud_big.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/mountain_C.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/obj/buildings/blue/building_archeryrange_blue.obj
+!addons/kaykit_medieval_hexagon_pack/Assets/obj/buildings/red/building_mine_red.obj
+
+# From kaykit_medieval_hexagon_pack - tiles
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/tiles/base/hex_grass.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/tiles/base/hex_grass_bottom.gltf
 !addons/kaykit_medieval_hexagon_pack/Assets/gltf/tiles/base/hex_grass_sloped_high.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/buildings/neutral/building_dirt.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/tiles/base/hex_grass_sloped_low.gltf
 !addons/kaykit_medieval_hexagon_pack/Assets/gltf/tiles/base/hex_water.gltf
-!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/props/resource_stone.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/obj/tiles/base/hex_grass.obj
+!addons/kaykit_medieval_hexagon_pack/Assets/obj/tiles/base/hex_grass_sloped_low.obj
+!addons/kaykit_medieval_hexagon_pack/Assets/obj/tiles/base/hex_grass_sloped_high.obj
+
+# From kaykit_medieval_hexagon_pack - decoration/nature
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/hills_A.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/hills_B_trees.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/hills_A_trees.gltf
 !addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/mountain_A.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/mountain_B.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/mountain_C.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/mountain_C_grass_trees.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/cloud_big.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/nature/waterlily_A.gltf
+
+# From kaykit_medieval_hexagon_pack - decoration/props
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/props/flag_red.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/props/resource_stone.gltf
 !addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/props/resource_lumber.gltf
 !addons/kaykit_medieval_hexagon_pack/Assets/gltf/decoration/props/sack.gltf
+!addons/kaykit_medieval_hexagon_pack/Assets/obj/decoration/props/resource_lumber.obj
+!addons/kaykit_medieval_hexagon_pack/Assets/obj/decoration/props/sack.obj
+!addons/kaykit_medieval_hexagon_pack/Assets/obj/decoration/props/resource_stone.obj
 
 # Include essential project files and directories
 !icon.svg
@@ -62,3 +76,4 @@ addons/kaykit_medieval_hexagon_pack/Assets/
 # Include .import files for the assets
 !Assets/**/*.import
 !addons/kaykit_medieval_hexagon_pack/Assets/**/*.import
+!addons/kenny_hexagons/**/*.import
