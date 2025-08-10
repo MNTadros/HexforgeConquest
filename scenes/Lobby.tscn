@@ -416,7 +416,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.16785, 4.24708, 0)
 speed = 12.0
 jump_velocity = 5.0
 gravity = 10.0
-hud_node_path = NodePath("../HUD")
 
 [node name="building_archeryrange_blue2" parent="." instance=ExtResource("15_trj2o")]
 transform = Transform3D(-3.93403e-07, 0, 9, 0, 9, 0, -9, 0, -3.93403e-07, -29.3766, -0.00437808, 28.9334)
@@ -696,8 +695,6 @@ shape = SubResource("ConvexPolygonShape3D_vd83n")
 [node name="cloud_big2" parent="." instance=ExtResource("15_ava28")]
 transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 35.6282, 14, -58.4485)
 
-[node name="HUD" parent="." instance=ExtResource("40_m28kj")]
-
 [node name="hex_grass_sloped_low3" parent="." instance=ExtResource("26_dx2rk")]
 transform = Transform3D(-4, 0, 6.9282, 0, 8, 0, -6.9282, 0, -4, 52.0679, 1.75988, -28.1761)
 
@@ -709,3 +706,5 @@ mesh = ExtResource("35_dx2rk")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="hex_grass_sloped_low3/MeshInstance3D/StaticBody3D"]
 shape = SubResource("ConvexPolygonShape3D_vd83n")
+
+[node name="HUD" parent="." instance=ExtResource("40_m28kj")]

@@ -1,19 +1,74 @@
-[gd_scene load_steps=2 format=3 uid="uid://dk5jrtp4usd6u"]
+[gd_scene load_steps=6 format=3 uid="uid://dk5jrtp4usd6u"]
+
+[ext_resource type="Script" uid="uid://dpag1j6ssk2ug" path="res://scripts/tile_bar.gd" id="1_tilebar"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_background"]
+bg_color = Color(0.2, 0.2, 0.2, 0.3)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_value_bg"]
+bg_color = Color(1, 1, 1, 0.2)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="LabelSettings" id="LabelSettings_value"]
+outline_size = 1
+outline_color = Color(0, 0, 0, 0.5)
 
 [sub_resource type="LabelSettings" id="LabelSettings_wsveh"]
+font_size = 14
 
-[node name="TileBar" type="HBoxContainer"]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="TileBar" type="Panel"]
+custom_minimum_size = Vector2(120, 26)
+offset_left = -12.0
+offset_top = -12.0
+offset_right = 108.0
+offset_bottom = 14.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_background")
+script = ExtResource("1_tilebar")
 
-[node name="Label" type="Label" parent="."]
-custom_minimum_size = Vector2(150, 0)
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = -2.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Icon" type="TextureRect" parent="HBoxContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ValueBackground" type="Panel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(28, 20)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_value_bg")
+
+[node name="ValueLabel" type="Label" parent="HBoxContainer/ValueBackground"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "0"
+label_settings = SubResource("LabelSettings_value")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+custom_minimum_size = Vector2(32, 0)
 layout_mode = 2
 label_settings = SubResource("LabelSettings_wsveh")
-horizontal_alignment = 3
-
-[node name="ProgressBar" type="ProgressBar" parent="."]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-max_value = 10.0
-value = 10.0
+vertical_alignment = 1

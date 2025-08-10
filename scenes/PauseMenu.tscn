@@ -130,10 +130,10 @@ text = "Master Volume"
 
 [node name="GraphicsPanel" type="Panel" parent="SettingsMenu"]
 layout_mode = 0
-offset_left = 165.0
+offset_left = 163.0
 offset_top = -202.0
 offset_right = 490.0
-offset_bottom = -67.0
+offset_bottom = -66.0
 
 [node name="CheckBox" type="CheckBox" parent="SettingsMenu/GraphicsPanel"]
 layout_mode = 0

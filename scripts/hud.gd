@@ -10,19 +10,28 @@ func show_pause_menu(show: bool) -> void:
 
 var tile_bars := {}
 
-const MAX_TILE_TIME := 10.0
+const MAX_TILE_TIME := 100.0
 
 func update_tiles(times: Dictionary) -> void:
+	# Ensure nodes are ready before proceeding
+	if tile_bar_container == null:
+		tile_bar_container = get_node_or_null("TileBarContainer")
+		if tile_bar_container == null:
+			return
+	
 	for tile_name in times.keys():
 		var time = times[tile_name]
 
 		if not tile_bars.has(tile_name):
 			var bar = tile_bar_scene.instantiate()
-			bar.get_node("Label").text = tile_name
-			bar.get_node("ProgressBar").max_value = MAX_TILE_TIME
-			bar.get_node("ProgressBar").value = time
+			
 			tile_bar_container.add_child(bar)
 			tile_bars[tile_name] = bar
+			
+			await get_tree().process_frame
+			
+			bar.setup_tile(tile_name, time, MAX_TILE_TIME)
+			bar.set_progress_bar_color(tile_name)
 		else:
 			var bar = tile_bars[tile_name]
-			bar.get_node("ProgressBar").value = time
+			bar.update_progress(time)

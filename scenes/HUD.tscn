@@ -9,26 +9,22 @@ script = ExtResource("1_fls4u")
 tile_bar_scene = ExtResource("2_7hsmw")
 
 [node name="HexTileLabel" type="Label" parent="."]
+visible = false
 anchors_preset = -1
-anchor_left = 0.084
+anchor_left = 0.016
 anchor_top = 0.032
-anchor_right = 0.084
+anchor_right = 0.016
 anchor_bottom = 0.032
-offset_left = -96.768
+offset_left = -18.432
 offset_top = -20.736
-offset_right = 97.232
+offset_right = 100.568
 offset_bottom = 20.264
 text = "..."
 
 [node name="TileBarContainer" type="VBoxContainer" parent="."]
-anchors_preset = -1
-anchor_left = 0.181
-anchor_top = 0.22
-anchor_right = 0.181
-anchor_bottom = 0.22
-offset_left = -207.512
-offset_top = -141.56
-offset_right = 206.488
-offset_bottom = 141.44
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 90.0
+offset_bottom = 125.0
 
 [node name="PauseMenu" parent="." instance=ExtResource("4_7hsmw")]

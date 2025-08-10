@@ -9,8 +9,6 @@ extends CharacterBody3D
 @export var max_slope_angle: float = 50.0
 @export var floor_snap: float = 0.6
 
-@export var hud_node_path: NodePath
-
 @onready var ground_ray = $RayCast3D
 @onready var head = $Head
 var hud = null
@@ -33,8 +31,17 @@ func _ready():
 	floor_max_angle = deg_to_rad(max_slope_angle)
 	floor_snap_length = floor_snap
 	
-	if hud_node_path != null:
-		hud = get_node_or_null(hud_node_path)
+	for tile_type in TILE_TYPES.keys():
+		tile_times[tile_type] = 0.0
+	
+	var main_scene = get_tree().current_scene
+	if main_scene:
+		hud = main_scene.get_node_or_null("HUD")
+		
+		# Wait a frame to ensure all nodes are ready, then send initial tile times
+		if hud != null:
+			await get_tree().process_frame
+			hud.update_tiles(tile_times)
 
 func _input(event):
 	if event.is_action_pressed("ui_cancel"):
@@ -92,9 +99,9 @@ func _physics_process(delta):
 			var tile_name = collider.name
 			if tile_name in TILE_TYPES:
 				current_tile = tile_name
-				if not tile_times.has(tile_name):
-					tile_times[tile_name] = 0.0
-				tile_times[tile_name] = clamp(tile_times[tile_name] + delta, 0, MAX_TILE_TIME)
+				# Only increment if we already have this tile in our dictionary
+				if tile_times.has(tile_name):
+					tile_times[tile_name] = clamp(tile_times[tile_name] + delta, 0, MAX_TILE_TIME)
 	else:
 		current_tile = ""
 

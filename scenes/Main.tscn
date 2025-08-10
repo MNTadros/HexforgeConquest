@@ -83,7 +83,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.16785, 4.24708, 0)
 speed = 12.0
 jump_velocity = 5.0
 gravity = 10.0
-hud_node_path = NodePath("../HUD")
 
 [node name="building_archeryrange_blue2" parent="." instance=ExtResource("15_trj2o")]
 transform = Transform3D(-3.93403e-07, 0, 9, 0, 9, 0, -9, 0, -3.93403e-07, -72.3766, 0.2, 35.9334)
