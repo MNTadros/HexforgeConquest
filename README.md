@@ -2,24 +2,35 @@
 
 ## 🎮 Game Overview
 
-**Hexforge Conquest** is a multiplayer survival game built in Godot 4.4. Players spawn into a procedurally-generated 3D world filled with resources, ancient structures, and enemy bases.
+**Hexforge Conquest** is a survival strategy PVE game built in Godot 4.4. Players spawn into a 3D world filled with resources, ancient structures, and enemies and their bases.
 
 **Core Loop:** Spawn → Gather → Craft → Build → Fight → Control Territory
+
+## 📸 Preview
+
+![Main Menu Demo](Assets/video/menu.gif)
 
 ## ✨ Features
 
 **Core Systems:**
 - Grind-based progression (mining, crafting, upgrading)
 - Base building with traps and defenses
-- PvP/PvE combat and raiding
+- PvE combat and raiding
 - Multiplayer factions
 - First-person medieval world
 
 **World:**
-- Procedural generation
 - Medieval hexagon theme
 - Resource nodes and ancient ruins
 - AI enemy strongholds
+
+**Controls:**
+- WASD - Movement
+- Space - Jump (stamina cost)
+- 1-6 - Use inventory items
+- R - Manual resource collection
+- U - Emergency unstuck
+- ESC - Pause menu
 
 ---
 
@@ -31,18 +42,16 @@
 - Player controller and movement
 - Scene architecture (Main, Player, HUD)
 - Basic UI framework
+- Survival mechanics (health, stamina)
+- Resource gathering and inventory
 
 **🚧 In Development:**
-- Survival mechanics (hunger, health, stamina)
-- Resource gathering and inventory
 - Crafting and progression
-- Multiplayer networking
 - Base building systems
+- PvE combat mechanics
 
 **📋 Planned:**
-- PvP combat mechanics
 - Faction system
-- Procedural world generation
 - Enemy AI and raiding
 
 ---
@@ -56,9 +65,8 @@ Uses selective asset loading for repository efficiency:
 ## 📈 Roadmap
 
 1. **Core Mechanics** - Player movement, resource gathering, crafting
-2. **Multiplayer** - Networking, player sync, chat
-3. **Combat & Building** - PvP mechanics, base building
-4. **Advanced Features** - Factions, procedural generation, AI
+2. **Combat & Building** - PvE mechanics, base building
+3. **Advanced Features** - Factions, AI Enemies
 
 ---
 
