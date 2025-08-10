@@ -28,6 +28,7 @@ func update_tiles(times: Dictionary) -> void:
 			tile_bar_container.add_child(bar)
 			tile_bars[tile_name] = bar
 			
+			# Wait one frame to ensure the node is fully in the scene tree
 			await get_tree().process_frame
 			
 			bar.setup_tile(tile_name, time, MAX_TILE_TIME)

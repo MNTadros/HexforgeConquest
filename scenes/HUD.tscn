@@ -24,7 +24,9 @@ text = "..."
 [node name="TileBarContainer" type="VBoxContainer" parent="."]
 offset_left = 5.0
 offset_top = 5.0
-offset_right = 90.0
-offset_bottom = 125.0
+offset_right = 120.0
+offset_bottom = 220.0
+grow_horizontal = 0
+grow_vertical = 0
 
 [node name="PauseMenu" parent="." instance=ExtResource("4_7hsmw")]

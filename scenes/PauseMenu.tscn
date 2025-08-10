@@ -1,172 +1,292 @@
-[gd_scene load_steps=3 format=3 uid="uid://cgchdphv6dtys"]
+[gd_scene load_steps=13 format=3 uid="uid://cgchdphv6dtys"]
 
 [ext_resource type="Script" uid="uid://bvfutpow6i7sa" path="res://scripts/PauseMenu.gd" id="1"]
 [ext_resource type="Script" uid="uid://ljwskkeh3hy8" path="res://scripts/SettingsMenu.gd" id="2"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_background"]
+bg_color = Color(0.1, 0.1, 0.15, 0.95)
+corner_radius_top_left = 20
+corner_radius_top_right = 20
+corner_radius_bottom_right = 20
+corner_radius_bottom_left = 20
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 10
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font_size = 36
+outline_size = 2
+outline_color = Color(0, 0, 0, 0.8)
+
+[sub_resource type="LabelSettings" id="LabelSettings_setting_label"]
+outline_size = 1
+outline_color = Color(0, 0, 0, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+bg_color = Color(0.3, 0.4, 0.6, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.6, 0.7, 0.9, 0.8)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
+bg_color = Color(0.15, 0.2, 0.3, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.5, 0.6, 0.8, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_normal"]
+bg_color = Color(0.2, 0.25, 0.35, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.5, 0.7, 0.6)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_settings_bg"]
+bg_color = Color(0.08, 0.08, 0.12, 0.98)
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 15
+
+[sub_resource type="LabelSettings" id="LabelSettings_settings_title"]
+font_size = 32
+outline_size = 2
+outline_color = Color(0, 0, 0, 0.8)
+
+[sub_resource type="LabelSettings" id="LabelSettings_section"]
+font_size = 20
+outline_size = 1
+outline_color = Color(0, 0, 0, 0.7)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_checkbox"]
+bg_color = Color(0.2, 0.2, 0.3, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.4, 0.5, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [node name="PauseMenu" type="CanvasLayer"]
 script = ExtResource("1")
 
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.6)
+
 [node name="Panel" type="Panel" parent="."]
-modulate = Color(1, 1, 1, 0.85)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -200.0
-offset_right = 150.0
-offset_bottom = 200.0
+offset_left = -200.0
+offset_top = -250.0
+offset_right = 200.0
+offset_bottom = 250.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_background")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 30.0
+offset_top = 30.0
+offset_right = -30.0
+offset_bottom = -30.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Label" type="Label" parent="Panel/VBoxContainer"]
+[node name="Title" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
-text = "Game Paused"
+text = "HEXFORGE CONQUEST"
+label_settings = SubResource("LabelSettings_title")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Resume" type="Button" parent="Panel/VBoxContainer"]
+[node name="Subtitle" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
-text = "Resume"
+text = "Game Paused"
+label_settings = SubResource("LabelSettings_setting_label")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Spacer1" type="Control" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="Resume" type="Button" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+text = "🎮 Resume Game"
+
+[node name="Spacer2" type="Control" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
 
 [node name="Settings" type="Button" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
-text = "Settings"
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+text = "⚙️ Settings"
+
+[node name="Spacer3" type="Control" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
 
 [node name="Quit" type="Button" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
-text = "Quit"
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+text = "🚪 Quit Game"
 
 [node name="SettingsMenu" type="Control" parent="."]
 layout_mode = 3
-anchors_preset = 0
-offset_left = 578.0
-offset_top = 323.0
-offset_right = 578.0
-offset_bottom = 323.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("2")
 
+[node name="Background" type="ColorRect" parent="SettingsMenu"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.8)
+
 [node name="Panel" type="Panel" parent="SettingsMenu"]
-modulate = Color(1, 1, 1, 0.85)
 layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
-offset_top = -200.0
-offset_right = 150.0
-offset_bottom = 200.0
+offset_left = -350.0
+offset_top = -300.0
+offset_right = 350.0
+offset_bottom = 300.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_settings_bg")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="SettingsMenu/Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 40.0
+offset_right = -40.0
+offset_bottom = -40.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="SettingsMenu/Panel/VBoxContainer"]
+[node name="Title" type="Label" parent="SettingsMenu/Panel/VBoxContainer"]
 layout_mode = 2
-text = "Settings"
+text = "⚙️ SETTINGS"
+label_settings = SubResource("LabelSettings_settings_title")
 horizontal_alignment = 1
 
-[node name="Audio" type="Button" parent="SettingsMenu/Panel/VBoxContainer"]
+[node name="Spacer1" type="Control" parent="SettingsMenu/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
-text = "Audio"
 
-[node name="Graphics" type="Button" parent="SettingsMenu/Panel/VBoxContainer"]
+[node name="AudioTitle" type="Label" parent="SettingsMenu/Panel/VBoxContainer"]
 layout_mode = 2
-text = "Graphics"
+text = "🔊 Audio Settings"
+label_settings = SubResource("LabelSettings_section")
+horizontal_alignment = 1
 
-[node name="Back" type="Button" parent="SettingsMenu/Panel/VBoxContainer"]
+[node name="Spacer2" type="Control" parent="SettingsMenu/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
-text = "Back"
 
-[node name="AudioPanel" type="Panel" parent="SettingsMenu"]
-layout_mode = 0
-offset_left = 163.0
-offset_top = -64.0
-offset_right = 491.0
-offset_bottom = 201.0
+[node name="AudioControls" type="VBoxContainer" parent="SettingsMenu/Panel/VBoxContainer"]
+layout_mode = 2
 
-[node name="Label" type="Label" parent="SettingsMenu/AudioPanel"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -123.5
-offset_right = 48.0
-offset_bottom = -99.5
-grow_horizontal = 2
-grow_vertical = 2
-text = "Audio Settings"
+[node name="VolumeLabel" type="Label" parent="SettingsMenu/Panel/VBoxContainer/AudioControls"]
+layout_mode = 2
+text = "Master Volume: 100%"
+label_settings = SubResource("LabelSettings_setting_label")
+horizontal_alignment = 1
 
-[node name="HSlider" type="HSlider" parent="SettingsMenu/AudioPanel"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.074
-anchor_right = 0.579
-anchor_bottom = 0.418
-offset_left = 27.0
-offset_top = 33.39
-offset_right = 119.088
-offset_bottom = 35.23
+[node name="MasterVolumeSlider" type="HSlider" parent="SettingsMenu/Panel/VBoxContainer/AudioControls"]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 1.0
 
-[node name="Label2" type="Label" parent="SettingsMenu/AudioPanel"]
-layout_mode = 0
-offset_left = 11.0
-offset_top = 61.0
-offset_right = 129.0
-offset_bottom = 84.0
-text = "Master Volume"
+[node name="Spacer3" type="Control" parent="SettingsMenu/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
 
-[node name="GraphicsPanel" type="Panel" parent="SettingsMenu"]
-layout_mode = 0
-offset_left = 163.0
-offset_top = -202.0
-offset_right = 490.0
-offset_bottom = -66.0
+[node name="GraphicsTitle" type="Label" parent="SettingsMenu/Panel/VBoxContainer"]
+layout_mode = 2
+text = "🖥️ Graphics Settings"
+label_settings = SubResource("LabelSettings_section")
+horizontal_alignment = 1
 
-[node name="CheckBox" type="CheckBox" parent="SettingsMenu/GraphicsPanel"]
-layout_mode = 0
-offset_left = 22.0
-offset_top = 56.0
-offset_right = 46.0
-offset_bottom = 80.0
-text = "VSync Toggle"
+[node name="Spacer4" type="Control" parent="SettingsMenu/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
 
-[node name="CheckBox2" type="CheckBox" parent="SettingsMenu/GraphicsPanel"]
-layout_mode = 0
-offset_left = 21.0
-offset_top = 14.0
-offset_right = 202.0
-offset_bottom = 58.0
-text = "Fullscreen Toggle"
+[node name="FullscreenCheck" type="CheckBox" parent="SettingsMenu/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_checkbox")
+text = "  Fullscreen Mode"
 
-[node name="GraphicsSettings" type="Label" parent="SettingsMenu/GraphicsPanel"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -60.5
-offset_top = -62.0
-offset_right = 51.5
-offset_bottom = -38.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Graphics Settings"
+[node name="Spacer5" type="Control" parent="SettingsMenu/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
 
-[connection signal="drag_ended" from="SettingsMenu/AudioPanel/HSlider" to="SettingsMenu" method="_on_h_slider_drag_ended"]
-[connection signal="value_changed" from="SettingsMenu/AudioPanel/HSlider" to="SettingsMenu" method="_on_master_volume_changed"]
-[connection signal="toggled" from="SettingsMenu/GraphicsPanel/CheckBox" to="SettingsMenu" method="_on_vsync_toggled"]
-[connection signal="toggled" from="SettingsMenu/GraphicsPanel/CheckBox2" to="SettingsMenu" method="_on_fullscreen_toggled"]
+[node name="VsyncCheck" type="CheckBox" parent="SettingsMenu/Panel/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_checkbox")
+text = "  VSync Enabled"
+
+[node name="Spacer6" type="Control" parent="SettingsMenu/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="SettingsMenu/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_vertical = 10
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+text = "⬅️ Back to Menu"
+
+[connection signal="value_changed" from="SettingsMenu/Panel/VBoxContainer/AudioControls/MasterVolumeSlider" to="SettingsMenu" method="_on_master_volume_changed"]
+[connection signal="toggled" from="SettingsMenu/Panel/VBoxContainer/FullscreenCheck" to="SettingsMenu" method="_on_fullscreen_toggled"]
+[connection signal="toggled" from="SettingsMenu/Panel/VBoxContainer/VsyncCheck" to="SettingsMenu" method="_on_vsync_toggled"]
+[connection signal="pressed" from="SettingsMenu/Panel/VBoxContainer/BackButton" to="SettingsMenu" method="_on_back_pressed"]
