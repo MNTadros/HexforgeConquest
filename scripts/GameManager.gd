@@ -4,7 +4,7 @@ extends Node
 # GAME TIMER AND STATS MANAGER
 # =======================================
 
-@export var game_duration: float = 10  # 6 minutes
+@export var game_duration: float = 360  # 6 minutes
 
 # Game state
 var time_remaining: float

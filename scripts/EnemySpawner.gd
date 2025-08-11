@@ -2,9 +2,9 @@ extends Node3D
 
 # Spawner configuration
 @export var enemy_scene: PackedScene = preload("res://scenes/Enemy.tscn")
-@export var max_enemies: int = 5
-@export var spawn_interval: float = 10.0
-@export var spawn_radius: float = 15.0
+@export var max_enemies: int = 20
+@export var spawn_interval: float = 1.0
+@export var spawn_radius: float = 25.0
 
 # Internal tracking
 var current_enemies: int = 0
@@ -24,7 +24,7 @@ func setup_spawn_points():
 		var angle = (i * 2 * PI) / point_count
 		var x = cos(angle) * spawn_radius
 		var z = sin(angle) * spawn_radius
-		spawn_points.append(Vector3(x, 0, z))
+		spawn_points.append(Vector3(x, 5, z))
 
 func spawn_initial_enemies():
 	var initial_count = min(3, max_enemies)

@@ -94,6 +94,10 @@ func _ready():
 	# Create red collision visualization for blacksmith buildings
 	create_blacksmith_collision_indicators()
 	
+	# Refresh collision indicators after a short delay to catch any late-loaded buildings
+	await get_tree().create_timer(0.1).timeout
+	refresh_blacksmith_indicators()
+	
 	var main_scene = get_tree().current_scene
 	if main_scene:
 		hud = main_scene.get_node_or_null("HUD")
@@ -489,6 +493,18 @@ func create_blacksmith_collision_indicators():
 		if building is StaticBody3D or building is RigidBody3D or building is CharacterBody3D:
 			blacksmith_buildings.append(building)
 			create_red_collision_indicator(building)
+
+func refresh_blacksmith_indicators():
+	# Clear existing indicators
+	for indicator in collision_indicators:
+		if indicator and is_instance_valid(indicator):
+			indicator.queue_free()
+	collision_indicators.clear()
+	blacksmith_buildings.clear()
+	
+	# Recreate indicators
+	create_blacksmith_collision_indicators()
+	print("Refreshed blacksmith collision indicators. Found ", blacksmith_buildings.size(), " blacksmith buildings.")
 
 func find_nodes_by_pattern(pattern: String) -> Array:
 	var found_nodes = []

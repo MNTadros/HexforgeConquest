@@ -130,4 +130,4 @@ func transition_to_game():
 	tween.tween_callback(start_game_scene)
 
 func start_game_scene():
-	get_tree().change_scene_to_file("res://scenes/Lobby.tscn")
+	get_tree().change_scene_to_file("res://scenes/Main.tscn")

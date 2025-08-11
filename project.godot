@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Hexforge Conquest"
-run/main_scene="res://scenes/MainMenu.tscn"
+run/main_scene="uid://dx7wihga3glyf"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 boot_splash/bg_color=Color(0.05, 0.05, 0.08, 1)
 boot_splash/image="res://images/game_icon.png"

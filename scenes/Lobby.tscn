@@ -1,5 +1,6 @@
-[gd_scene load_steps=96 format=3 uid="uid://b1cpuj2a035rv"]
+[gd_scene load_steps=97 format=3 uid="uid://b1cpuj2a035rv"]
 
+[ext_resource type="Script" path="res://scripts/PerformanceMonitor.gd" id="1_fsrlq"]
 [ext_resource type="PackedScene" uid="uid://dj1xxdo2307t7" path="res://Assets/gltf/floor_tile_small_weeds_A.gltf.glb" id="2_evtev"]
 [ext_resource type="PackedScene" uid="uid://dpj5r7atahxrx" path="res://Assets/gltf/wall_arched.gltf.glb" id="3_1mijc"]
 [ext_resource type="PackedScene" uid="uid://cx5b0lbur2m60" path="res://Assets/gltf/stairs.gltf.glb" id="4_qax8s"]
@@ -199,7 +200,8 @@ points = PackedVector3Array(0.848148, -0.972114, 0.665064, -0.0618916, -0.970836
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_vd83n"]
 points = PackedVector3Array(1, 0.44861, 0.57735, 0.949883, 0.5, 0.549093, 0, 0.44861, 1.1547, 1, -1, 0.57735, 1, 0.44861, -0.57735, 0, 0.5, 1.09751, 0.949883, 0.5, -0.549319, 0, -1, 1.1547, -0.955364, 0.02222, 0.546154, -1, -0.0514879, 0.57735, 1, -1, -0.57735, 0, 0.44861, -1.1547, 0, 0.5, -1.09773, -1, -1, 0.57735, -0.955364, 0.02222, -0.54638, -1, -0.0514879, -0.57735, 0, -1, -1.1547, -1, -1, -0.57735)
 
-[node name="Node3D" type="Node3D"]
+[node name="Node3D2" type="Node3D"]
+script = ExtResource("1_fsrlq")
 
 [node name="World" type="Node3D" parent="."]
 
