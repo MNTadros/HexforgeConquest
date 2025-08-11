@@ -105,7 +105,7 @@ loop_mode = 1
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("MenuContainer/VBoxContainer/Title:modulate")
+tracks/0/path = NodePath("MenuContainer/VBoxContainer/TitleContainer/Title:modulate")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
@@ -171,6 +171,36 @@ scale_amount_min = 3.0
 scale_amount_max = 12.0
 color = Color(0.3, 0.4, 0.7, 0.2)
 
+[node name="AccentLine1" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -4.0
+offset_bottom = 648.0
+grow_horizontal = 0
+color = Color(0.4, 0.5, 0.8, 0.6)
+
+[node name="AccentLine2" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -4.0
+offset_right = 1152.0
+grow_vertical = 0
+color = Color(0.4, 0.5, 0.8, 0.6)
+
+[node name="HexDecoLeft" type="Polygon2D" parent="."]
+position = Vector2(100, 300)
+color = Color(0.2, 0.3, 0.6, 0.3)
+polygon = PackedVector2Array(-20, -35, 20, -35, 40, 0, 20, 35, -20, 35, -40, 0)
+
+[node name="HexDecoRight" type="Polygon2D" parent="."]
+position = Vector2(1052, 300)
+color = Color(0.2, 0.3, 0.6, 0.3)
+polygon = PackedVector2Array(-20, -35, 20, -35, 40, 0, 20, 35, -20, 35, -40, 0)
+
 [node name="MenuContainer" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -187,16 +217,35 @@ theme_override_constants/margin_bottom = 40
 layout_mode = 2
 alignment = 1
 
-[node name="Title" type="Label" parent="MenuContainer/VBoxContainer"]
+[node name="TitleContainer" type="HBoxContainer" parent="MenuContainer/VBoxContainer"]
 layout_mode = 2
+alignment = 1
+
+[node name="TitleAccentLeft" type="ColorRect" parent="MenuContainer/VBoxContainer/TitleContainer"]
+custom_minimum_size = Vector2(60, 4)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.5, 0.6, 0.9, 0.8)
+
+[node name="Title" type="Label" parent="MenuContainer/VBoxContainer/TitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
 text = "HEXFORGE CONQUEST"
 label_settings = SubResource("LabelSettings_title")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="TitleAccentRight" type="ColorRect" parent="MenuContainer/VBoxContainer/TitleContainer"]
+custom_minimum_size = Vector2(60, 4)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.5, 0.6, 0.9, 0.8)
+
 [node name="Subtitle" type="Label" parent="MenuContainer/VBoxContainer"]
 layout_mode = 2
-text = "Build, Conquer, Survive"
+text = "◦ Build, Conquer, Survive ◦"
 label_settings = SubResource("LabelSettings_subtitle")
 horizontal_alignment = 1
 
@@ -218,7 +267,7 @@ theme_override_font_sizes/font_size = 24
 theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-text = "🎮 Start Game"
+text = "▶ START ADVENTURE"
 
 [node name="SettingsButton" type="Button" parent="MenuContainer/VBoxContainer/ButtonsContainer"]
 custom_minimum_size = Vector2(0, 60)
@@ -228,7 +277,7 @@ theme_override_font_sizes/font_size = 24
 theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-text = "⚙️ Settings"
+text = "⚡ CONFIGURATION"
 
 [node name="QuitButton" type="Button" parent="MenuContainer/VBoxContainer/ButtonsContainer"]
 custom_minimum_size = Vector2(0, 60)
@@ -238,7 +287,7 @@ theme_override_font_sizes/font_size = 24
 theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-text = "🚪 Quit Game"
+text = "✕ EXIT GAME"
 
 [node name="Spacer2" type="Control" parent="MenuContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 40)
@@ -312,21 +361,62 @@ offset_bottom = -40.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SettingsTitle" type="Label" parent="SettingsPanel/SettingsContainer/VBoxContainer"]
+[node name="SettingsTitleContainer" type="HBoxContainer" parent="SettingsPanel/SettingsContainer/VBoxContainer"]
 layout_mode = 2
-text = "⚙️ SETTINGS"
+alignment = 1
+
+[node name="SettingsTitleAccentLeft" type="ColorRect" parent="SettingsPanel/SettingsContainer/VBoxContainer/SettingsTitleContainer"]
+custom_minimum_size = Vector2(40, 3)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.5, 0.6, 0.9, 0.8)
+
+[node name="SettingsTitle" type="Label" parent="SettingsPanel/SettingsContainer/VBoxContainer/SettingsTitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "◆ CONFIGURATION"
 label_settings = SubResource("LabelSettings_title")
 horizontal_alignment = 1
+
+[node name="SettingsTitleAccentRight" type="ColorRect" parent="SettingsPanel/SettingsContainer/VBoxContainer/SettingsTitleContainer"]
+custom_minimum_size = Vector2(40, 3)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.5, 0.6, 0.9, 0.8)
 
 [node name="Spacer1" type="Control" parent="SettingsPanel/SettingsContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 
-[node name="AudioTitle" type="Label" parent="SettingsPanel/SettingsContainer/VBoxContainer"]
+[node name="AudioContainer" type="VBoxContainer" parent="SettingsPanel/SettingsContainer/VBoxContainer"]
 layout_mode = 2
-text = "🔊 Audio Settings"
+
+[node name="AudioTitleContainer" type="HBoxContainer" parent="SettingsPanel/SettingsContainer/VBoxContainer/AudioContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="AudioAccentLeft" type="ColorRect" parent="SettingsPanel/SettingsContainer/VBoxContainer/AudioContainer/AudioTitleContainer"]
+custom_minimum_size = Vector2(30, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.3, 0.4, 0.7, 0.6)
+
+[node name="AudioTitle" type="Label" parent="SettingsPanel/SettingsContainer/VBoxContainer/AudioContainer/AudioTitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "♪ Audio Settings"
 label_settings = SubResource("LabelSettings_subtitle")
 horizontal_alignment = 1
+
+[node name="AudioAccentRight" type="ColorRect" parent="SettingsPanel/SettingsContainer/VBoxContainer/AudioContainer/AudioTitleContainer"]
+custom_minimum_size = Vector2(30, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.3, 0.4, 0.7, 0.6)
 
 [node name="Spacer2" type="Control" parent="SettingsPanel/SettingsContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
@@ -347,11 +437,33 @@ value = 1.0
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 
-[node name="GraphicsTitle" type="Label" parent="SettingsPanel/SettingsContainer/VBoxContainer"]
+[node name="GraphicsContainer" type="VBoxContainer" parent="SettingsPanel/SettingsContainer/VBoxContainer"]
 layout_mode = 2
-text = "🖥️ Graphics Settings"
+
+[node name="GraphicsTitleContainer" type="HBoxContainer" parent="SettingsPanel/SettingsContainer/VBoxContainer/GraphicsContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="GraphicsAccentLeft" type="ColorRect" parent="SettingsPanel/SettingsContainer/VBoxContainer/GraphicsContainer/GraphicsTitleContainer"]
+custom_minimum_size = Vector2(30, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.3, 0.4, 0.7, 0.6)
+
+[node name="GraphicsTitle" type="Label" parent="SettingsPanel/SettingsContainer/VBoxContainer/GraphicsContainer/GraphicsTitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "◈ Display Settings"
 label_settings = SubResource("LabelSettings_subtitle")
 horizontal_alignment = 1
+
+[node name="GraphicsAccentRight" type="ColorRect" parent="SettingsPanel/SettingsContainer/VBoxContainer/GraphicsContainer/GraphicsTitleContainer"]
+custom_minimum_size = Vector2(30, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.3, 0.4, 0.7, 0.6)
 
 [node name="Spacer4" type="Control" parent="SettingsPanel/SettingsContainer/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
@@ -380,7 +492,7 @@ size_flags_vertical = 10
 theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-text = "⬅️ Back to Menu"
+text = "◄ RETURN TO MENU"
 
 [connection signal="pressed" from="MenuContainer/VBoxContainer/ButtonsContainer/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="MenuContainer/VBoxContainer/ButtonsContainer/SettingsButton" to="." method="_on_settings_button_pressed"]

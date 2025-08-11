@@ -13,7 +13,7 @@ shadow_color = Color(0, 0, 0, 0.3)
 shadow_size = 10
 
 [sub_resource type="LabelSettings" id="LabelSettings_title"]
-font_size = 36
+font_size = 28
 outline_size = 2
 outline_color = Color(0, 0, 0, 0.8)
 
@@ -103,10 +103,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -200.0
-offset_top = -250.0
-offset_right = 200.0
-offset_bottom = 250.0
+offset_left = -160.0
+offset_top = -180.0
+offset_right = 160.0
+offset_bottom = 180.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_background")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
@@ -114,62 +114,87 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 30.0
-offset_top = 30.0
-offset_right = -30.0
-offset_bottom = -30.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Title" type="Label" parent="Panel/VBoxContainer"]
+[node name="TitleContainer" type="HBoxContainer" parent="Panel/VBoxContainer"]
 layout_mode = 2
+alignment = 1
+
+[node name="TitleAccentLeft" type="ColorRect" parent="Panel/VBoxContainer/TitleContainer"]
+custom_minimum_size = Vector2(30, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.5, 0.6, 0.9, 0.8)
+
+[node name="Title" type="Label" parent="Panel/VBoxContainer/TitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
 text = "HEXFORGE CONQUEST"
 label_settings = SubResource("LabelSettings_title")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="TitleAccentRight" type="ColorRect" parent="Panel/VBoxContainer/TitleContainer"]
+custom_minimum_size = Vector2(30, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.5, 0.6, 0.9, 0.8)
+
 [node name="Subtitle" type="Label" parent="Panel/VBoxContainer"]
 layout_mode = 2
-text = "Game Paused"
+text = "◦ Game Paused ◦"
 label_settings = SubResource("LabelSettings_setting_label")
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Spacer1" type="Control" parent="Panel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 40)
+custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 
 [node name="Resume" type="Button" parent="Panel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(200, 35)
 layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 18
 theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-text = "🎮 Resume Game"
+text = "▶ RESUME GAME"
 
 [node name="Spacer2" type="Control" parent="Panel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 10)
+custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 
 [node name="Settings" type="Button" parent="Panel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(200, 35)
 layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 18
 theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-text = "⚙️ Settings"
+text = "⚡ CONFIGURATION"
 
 [node name="Spacer3" type="Control" parent="Panel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 10)
+custom_minimum_size = Vector2(0, 8)
 layout_mode = 2
 
 [node name="Quit" type="Button" parent="Panel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(200, 35)
 layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 18
 theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-text = "🚪 Quit Game"
+text = "✕ EXIT GAME"
 
 [node name="SettingsMenu" type="Control" parent="."]
 layout_mode = 3
@@ -210,21 +235,62 @@ offset_bottom = -40.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Title" type="Label" parent="SettingsMenu/Panel/VBoxContainer"]
+[node name="SettingsTitleContainer" type="HBoxContainer" parent="SettingsMenu/Panel/VBoxContainer"]
 layout_mode = 2
-text = "⚙️ SETTINGS"
+alignment = 1
+
+[node name="SettingsTitleAccentLeft" type="ColorRect" parent="SettingsMenu/Panel/VBoxContainer/SettingsTitleContainer"]
+custom_minimum_size = Vector2(40, 3)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.5, 0.6, 0.9, 0.8)
+
+[node name="Title" type="Label" parent="SettingsMenu/Panel/VBoxContainer/SettingsTitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "◆ CONFIGURATION"
 label_settings = SubResource("LabelSettings_settings_title")
 horizontal_alignment = 1
+
+[node name="SettingsTitleAccentRight" type="ColorRect" parent="SettingsMenu/Panel/VBoxContainer/SettingsTitleContainer"]
+custom_minimum_size = Vector2(40, 3)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.5, 0.6, 0.9, 0.8)
 
 [node name="Spacer1" type="Control" parent="SettingsMenu/Panel/VBoxContainer"]
 custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 
-[node name="AudioTitle" type="Label" parent="SettingsMenu/Panel/VBoxContainer"]
+[node name="AudioContainer" type="VBoxContainer" parent="SettingsMenu/Panel/VBoxContainer"]
 layout_mode = 2
-text = "🔊 Audio Settings"
+
+[node name="AudioTitleContainer" type="HBoxContainer" parent="SettingsMenu/Panel/VBoxContainer/AudioContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="AudioAccentLeft" type="ColorRect" parent="SettingsMenu/Panel/VBoxContainer/AudioContainer/AudioTitleContainer"]
+custom_minimum_size = Vector2(30, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.3, 0.4, 0.7, 0.6)
+
+[node name="AudioTitle" type="Label" parent="SettingsMenu/Panel/VBoxContainer/AudioContainer/AudioTitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "♪ Audio Settings"
 label_settings = SubResource("LabelSettings_section")
 horizontal_alignment = 1
+
+[node name="AudioAccentRight" type="ColorRect" parent="SettingsMenu/Panel/VBoxContainer/AudioContainer/AudioTitleContainer"]
+custom_minimum_size = Vector2(30, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.3, 0.4, 0.7, 0.6)
 
 [node name="Spacer2" type="Control" parent="SettingsMenu/Panel/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
@@ -249,11 +315,33 @@ value = 1.0
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 
-[node name="GraphicsTitle" type="Label" parent="SettingsMenu/Panel/VBoxContainer"]
+[node name="GraphicsContainer" type="VBoxContainer" parent="SettingsMenu/Panel/VBoxContainer"]
 layout_mode = 2
-text = "🖥️ Graphics Settings"
+
+[node name="GraphicsTitleContainer" type="HBoxContainer" parent="SettingsMenu/Panel/VBoxContainer/GraphicsContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="GraphicsAccentLeft" type="ColorRect" parent="SettingsMenu/Panel/VBoxContainer/GraphicsContainer/GraphicsTitleContainer"]
+custom_minimum_size = Vector2(30, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.3, 0.4, 0.7, 0.6)
+
+[node name="GraphicsTitle" type="Label" parent="SettingsMenu/Panel/VBoxContainer/GraphicsContainer/GraphicsTitleContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "◈ Display Settings"
 label_settings = SubResource("LabelSettings_section")
 horizontal_alignment = 1
+
+[node name="GraphicsAccentRight" type="ColorRect" parent="SettingsMenu/Panel/VBoxContainer/GraphicsContainer/GraphicsTitleContainer"]
+custom_minimum_size = Vector2(30, 2)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0.3, 0.4, 0.7, 0.6)
 
 [node name="Spacer4" type="Control" parent="SettingsMenu/Panel/VBoxContainer"]
 custom_minimum_size = Vector2(0, 20)
@@ -278,13 +366,15 @@ custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 
 [node name="BackButton" type="Button" parent="SettingsMenu/Panel/VBoxContainer"]
-custom_minimum_size = Vector2(0, 50)
+custom_minimum_size = Vector2(200, 40)
 layout_mode = 2
+size_flags_horizontal = 4
 size_flags_vertical = 10
+theme_override_font_sizes/font_size = 18
 theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-text = "⬅️ Back to Menu"
+text = "◄ RETURN TO MENU"
 
 [connection signal="value_changed" from="SettingsMenu/Panel/VBoxContainer/AudioControls/MasterVolumeSlider" to="SettingsMenu" method="_on_master_volume_changed"]
 [connection signal="toggled" from="SettingsMenu/Panel/VBoxContainer/FullscreenCheck" to="SettingsMenu" method="_on_fullscreen_toggled"]

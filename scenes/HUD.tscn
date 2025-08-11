@@ -33,6 +33,36 @@ grow_vertical = 0
 [node name="CoinsTileBar" parent="TileBarContainer" instance=ExtResource("2_7hsmw")]
 layout_mode = 2
 
+[node name="GameTimer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 20.0
+offset_right = 150.0
+offset_bottom = 80.0
+grow_horizontal = 2
+
+[node name="TimerPanel" type="Panel" parent="GameTimer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TimerLabel" type="Label" parent="GameTimer/TimerPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "06:00"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="PauseMenu" parent="." instance=ExtResource("4_7hsmw")]
 
 [node name="CraftingMenu" parent="." instance=ExtResource("5_crafting")]

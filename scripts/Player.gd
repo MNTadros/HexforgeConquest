@@ -285,6 +285,11 @@ func take_damage(amount: float):
 	if hud != null:
 		hud.update_health(current_health, max_health)
 	
+	# Report damage taken to game manager
+	var game_manager = get_tree().get_first_node_in_group("game_manager")
+	if game_manager:
+		game_manager.add_damage_taken(amount)
+	
 	if current_health <= 0:
 		die()
 
@@ -458,6 +463,11 @@ func collect_resource_from_current_tile():
 				var success = hud.add_item_to_inventory("Iron", TILE_ITEM_ICONS.get("HexTile_BlacksmithBuilding", ""), 1)
 				print("Added iron to inventory: ", success)
 				hud.show_collection_popup("Collected Iron! (Press C to craft)", Color.GREEN)
+	
+	# Report resource collected to game manager
+	var game_manager = get_tree().get_first_node_in_group("game_manager")
+	if game_manager:
+		game_manager.add_resource_collected()
 	
 	# Set cooldown timer for this tile
 	tile_collect_cooldown[current_tile] = MANUAL_COLLECT_COOLDOWN

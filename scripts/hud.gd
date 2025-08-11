@@ -11,6 +11,8 @@ extends CanvasLayer
 @onready var death_screen = $DeathScreen
 @onready var respawn_timer_label = $DeathScreen/RespawnLabel
 @onready var collection_popup = $PlayerUI/CollectionPopup
+@onready var game_timer_panel = $GameTimer/TimerPanel
+@onready var game_timer_label = $GameTimer/TimerPanel/TimerLabel
 @onready var inventory_slots = []
 
 func _ready():
@@ -32,6 +34,7 @@ func _ready():
 	setup_death_screen()
 	setup_crafting_menu()
 	setup_coins_tile_bar()
+	setup_game_timer()
 
 func setup_health_bar():
 	# Create green style for health bar
@@ -118,6 +121,33 @@ func setup_coins_tile_bar():
 		if label_node:
 			label_node.text = "Coins"
 			label_node.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0))  # Golden text
+
+func setup_game_timer():
+	if game_timer_panel != null and game_timer_label != null:
+		# Style the timer panel
+		var timer_style = StyleBoxFlat.new()
+		timer_style.bg_color = Color(0.1, 0.1, 0.1, 0.8)  # Dark background
+		timer_style.border_color = Color(0.6, 0.6, 0.6)
+		timer_style.border_width_left = 2
+		timer_style.border_width_right = 2
+		timer_style.border_width_top = 2
+		timer_style.border_width_bottom = 2
+		timer_style.corner_radius_top_left = 8
+		timer_style.corner_radius_top_right = 8
+		timer_style.corner_radius_bottom_right = 8
+		timer_style.corner_radius_bottom_left = 8
+		
+		game_timer_panel.add_theme_stylebox_override("panel", timer_style)
+		
+		# Style the timer label
+		game_timer_label.add_theme_color_override("font_color", Color.WHITE)
+		game_timer_label.add_theme_color_override("font_shadow_color", Color.BLACK)
+		game_timer_label.add_theme_constant_override("shadow_offset_x", 2)
+		game_timer_label.add_theme_constant_override("shadow_offset_y", 2)
+		
+		# Set larger font size
+		var font_size = 24
+		game_timer_label.add_theme_font_size_override("font_size", font_size)
 
 func setup_inventory_slots():
 	# Style each inventory slot
@@ -330,3 +360,23 @@ func update_tiles(times: Dictionary) -> void:
 		else:
 			var bar = tile_bars[tile_name]
 			bar.update_progress(time)
+
+# Game timer functions
+func update_timer(time_remaining: float) -> void:
+	if game_timer_label == null:
+		return
+	
+	var minutes = int(time_remaining) / 60
+	var seconds = int(time_remaining) % 60
+	var time_text = "%02d:%02d" % [minutes, seconds]
+	
+	game_timer_label.text = time_text
+	
+	# Update color based on time remaining
+	var timer_color = Color.WHITE
+	if time_remaining <= 60.0:  # Last minute - red
+		timer_color = Color.RED
+	elif time_remaining <= 120.0:  # Last 2 minutes - yellow
+		timer_color = Color.YELLOW
+	
+	game_timer_label.add_theme_color_override("font_color", timer_color)

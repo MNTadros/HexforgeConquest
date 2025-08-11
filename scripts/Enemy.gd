@@ -160,6 +160,11 @@ func attack_player():
 		
 		if player.has_method("take_damage"):
 			player.take_damage(damage)
+			
+			# Report damage dealt to game manager
+			var game_manager = get_tree().get_first_node_in_group("game_manager")
+			if game_manager:
+				game_manager.add_damage_dealt(damage)
 		
 		attack_timer = attack_cooldown
 		
@@ -189,6 +194,11 @@ func die():
 	
 	is_dead = true
 	velocity = Vector3.ZERO
+	
+	# Report kill to game manager
+	var game_manager = get_tree().get_first_node_in_group("game_manager")
+	if game_manager:
+		game_manager.add_enemy_kill()
 	
 	# Play death animation
 	play_animation(AnimationState.DYING)
