@@ -1,12 +1,12 @@
 extends CharacterBody3D
 
 # Core enemy properties
-@export var speed: float = 3.0
+@export var speed: float = 2.0
 @export var follow_distance: float = 15.0
 @export var attack_distance: float = 2.0
-@export var damage: float = 25.0
+@export var damage: float = 15.0
 @export var attack_cooldown: float = 1.5
-@export var max_health: float = 100.0
+@export var max_health: float = 70.0
 
 # Internal variables
 var current_health: float
@@ -195,6 +195,9 @@ func die():
 	is_dead = true
 	velocity = Vector3.ZERO
 	
+	# Drop resources before reporting kill
+	drop_resources()
+	
 	# Report kill to game manager
 	var game_manager = get_tree().get_first_node_in_group("game_manager")
 	if game_manager:
@@ -216,6 +219,78 @@ func die():
 	
 	await get_tree().create_timer(death_duration).timeout
 	queue_free()
+
+func drop_resources():
+	# Define possible resource drops
+	var resource_types = [
+		"Grass Item",
+		"Plains Item", 
+		"Wheat Item",
+		"Water Item",
+		"Iron"
+	]
+	
+	# Define resource icons (matching the player's TILE_ITEM_ICONS)
+	var resource_icons = {
+		"Grass Item": "res://images/icons/grass_icon.png",
+		"Plains Item": "res://images/icons/plains_icon.png",
+		"Wheat Item": "res://images/icons/wheat_icon.png", 
+		"Water Item": "res://images/icons/water_icon.png",
+		"Iron": "res://images/icons/blacksmith_icon.png"
+	}
+	
+	# Find the player to add resources to their inventory
+	if player == null:
+		player = get_tree().get_first_node_in_group("player")
+	
+	if player == null:
+		print("No player found - cannot drop resources")
+		return
+	
+	# Get the player's HUD for inventory access
+	var hud = null
+	var main_scene = get_tree().current_scene
+	if main_scene:
+		hud = main_scene.get_node_or_null("HUD")
+	
+	if hud == null:
+		print("No HUD found - cannot drop resources")
+		return
+	
+	# Randomly drop 1-4 resources
+	var num_drops = randi_range(1, 4)
+	print("Skeleton dropping ", num_drops, " resources")
+	
+	var total_message = "Skeleton dropped: "
+	var dropped_items = []
+	
+	for i in range(num_drops):
+		# Pick a random resource type
+		var resource_type = resource_types[randi() % resource_types.size()]
+		var resource_icon = resource_icons.get(resource_type, "")
+		
+		# Add to player's inventory
+		var success = hud.add_item_to_inventory(resource_type, resource_icon, 1)
+		if success:
+			dropped_items.append(resource_type)
+			print("Dropped: ", resource_type)
+		else:
+			print("Failed to drop: ", resource_type, " (inventory full?)")
+	
+	# Show a collection popup with all dropped items
+	if dropped_items.size() > 0 and hud.has_method("show_collection_popup"):
+		if dropped_items.size() == 1:
+			total_message += dropped_items[0]
+		elif dropped_items.size() == 2:
+			total_message += dropped_items[0] + " and " + dropped_items[1]
+		else:
+			for j in range(dropped_items.size()):
+				if j == dropped_items.size() - 1:
+					total_message += "and " + dropped_items[j]
+				else:
+					total_message += dropped_items[j] + ", "
+		
+		hud.show_collection_popup(total_message, Color.GOLD)
 
 func update_health_bar():
 	if health_bar == null:

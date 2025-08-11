@@ -1,6 +1,6 @@
 extends CharacterBody3D
 
-@export var speed: float = 5.0
+@export var speed: float = 7.0
 @export var acceleration: float = 10.0
 @export var deceleration: float = 14.0
 @export var jump_velocity: float = 4.5
@@ -39,6 +39,12 @@ var collision_visibility_distance = 5.0  # Distance at which collision indicator
 # Equipment System - Clean and Simple
 var current_weapon_model = null  # Currently equipped weapon model
 var current_weapon_type = ""     # Currently equipped weapon filename
+
+# Combat System
+var attack_range: float = 3.0
+var attack_damage: float = 25.0
+var attack_cooldown: float = 1.0
+var attack_timer: float = 0.0
 
 # Death and respawn variables
 var is_dead: bool = false
@@ -108,12 +114,12 @@ func _ready():
 			hud.update_health(current_health, max_health)
 			hud.update_stamina(current_stamina, max_stamina)
 			
-			# Add starting resources for testing (100 of each)
-			hud.add_item_to_inventory("Grass Item", TILE_ITEM_ICONS.get("HexTile_Grass", ""), 100)
-			hud.add_item_to_inventory("Plains Item", TILE_ITEM_ICONS.get("HexTile_Plains", ""), 100)
-			hud.add_item_to_inventory("Wheat Item", TILE_ITEM_ICONS.get("HexTile_Wheat", ""), 100)
-			hud.add_item_to_inventory("Water Item", TILE_ITEM_ICONS.get("HexTile_Water", ""), 100)
-			print("Added 100 of each resource for testing")
+			# Add starting resources for testing (5 of each)
+			hud.add_item_to_inventory("Grass Item", TILE_ITEM_ICONS.get("HexTile_Grass", ""), 5)
+			hud.add_item_to_inventory("Plains Item", TILE_ITEM_ICONS.get("HexTile_Plains", ""), 5)
+			hud.add_item_to_inventory("Wheat Item", TILE_ITEM_ICONS.get("HexTile_Wheat", ""), 5)
+			hud.add_item_to_inventory("Water Item", TILE_ITEM_ICONS.get("HexTile_Water", ""), 5)
+			# print("Added 100 of each resource for testing")
 			
 func _input(event):
 	if is_dead:
@@ -126,7 +132,7 @@ func _input(event):
 		   event.is_action_pressed("move_left") or event.is_action_pressed("move_right") or \
 		   event.is_action_pressed("move_backward") or event.is_action_pressed("jump") or \
 		   event.is_action_pressed("unstuck") or event.is_action_pressed("collect_resource") or \
-		   event.is_action_pressed("open_crafting") or \
+		   event.is_action_pressed("open_crafting") or event.is_action_pressed("attack") or \
 		   (event.is_action_pressed("use_item_1") or event.is_action_pressed("use_item_2") or \
 			event.is_action_pressed("use_item_3") or event.is_action_pressed("use_item_4") or \
 			event.is_action_pressed("use_item_5") or event.is_action_pressed("use_item_6") or \
@@ -175,6 +181,11 @@ func _input(event):
 		print("F key pressed - spawning test enemy")
 		spawn_test_enemy()
 	
+	# Attack with left mouse click
+	if event.is_action_pressed("attack"):
+		print("Left mouse clicked - attempting attack")
+		attempt_attack()
+	
 	for i in range(9):
 		if Input.is_action_just_pressed("use_item_" + str(i + 1)):
 			use_item_from_slot(i)
@@ -199,6 +210,10 @@ func _toggle_pause():
 func _physics_process(delta):
 	if get_tree().paused:
 		return
+	
+	# Update attack timer
+	if attack_timer > 0:
+		attack_timer -= delta
 	
 	# Check if crafting menu is open - if so, don't process movement
 	if hud != null and hud.crafting_menu != null and hud.crafting_menu.visible:
@@ -594,6 +609,116 @@ func update_collision_indicator_visibility():
 		indicator.visible = distance <= collision_visibility_distance
 
 # =======================================
+# COMBAT SYSTEM
+# =======================================
+
+func attempt_attack():
+	# Check if player is dead
+	if is_dead:
+		return
+	
+	# Check if attack is on cooldown
+	if attack_timer > 0:
+		if hud != null:
+			hud.show_collection_popup("Attack on cooldown! " + str(int(attack_timer)) + "s", Color.ORANGE)
+		return
+	
+	# Check if weapon is equipped
+	if current_weapon_model == null:
+		if hud != null:
+			hud.show_collection_popup("No weapon equipped! Press T to equip a weapon.", Color.RED)
+		return
+	
+	# Perform attack animation
+	perform_attack_animation()
+	
+	# Perform raycast from camera to detect enemies
+	var camera = head.get_child(0) if head.get_child_count() > 0 else null
+	if camera == null:
+		print("No camera found for attack raycast")
+		return
+	
+	var space_state = get_world_3d().direct_space_state
+	var from = camera.global_position
+	var to = from + (-camera.global_transform.basis.z * attack_range)
+	
+	var query = PhysicsRayQueryParameters3D.create(from, to)
+	query.exclude = [self]  # Don't hit the player
+	query.collision_mask = 1  # Default collision layer
+	
+	# Debug: Draw attack range (optional - for development)
+	if OS.is_debug_build():
+		print("Attack raycast from: ", from, " to: ", to, " (distance: ", from.distance_to(to), ")")
+	
+	var result = space_state.intersect_ray(query)
+	
+	if result:
+		var hit_body = result.collider
+		print("Attack hit: ", hit_body.name if hit_body else "null")
+		
+		# Check if we hit an enemy (check for enemy group or take_damage method)
+		if hit_body and (hit_body.is_in_group("enemies") or hit_body.has_method("take_damage")):
+			var damage = calculate_weapon_damage()
+			print("Dealing ", damage, " damage to ", hit_body.name)
+			
+			hit_body.take_damage(damage)
+			
+			# Show attack feedback
+			if hud != null:
+				hud.show_collection_popup("Hit! " + str(damage) + " damage", Color.RED)
+			
+			# Start attack cooldown
+			attack_timer = attack_cooldown
+			
+			# Report damage dealt to game manager
+			var game_manager = get_tree().get_first_node_in_group("game_manager")
+			if game_manager:
+				game_manager.add_damage_dealt(damage)
+		else:
+			# Hit something that's not an enemy
+			if hud != null:
+				hud.show_collection_popup("No enemy target!", Color.YELLOW)
+			attack_timer = attack_cooldown * 0.5  # Shorter cooldown for missed attacks
+	else:
+		# Didn't hit anything
+		if hud != null:
+			hud.show_collection_popup("Attack missed!", Color.YELLOW)
+		attack_timer = attack_cooldown * 0.5  # Shorter cooldown for missed attacks
+
+func perform_attack_animation():
+	if current_weapon_model == null:
+		return
+	
+	# Create a simple swing animation by rotating the weapon
+	var tween = create_tween()
+	var original_rotation = current_weapon_model.rotation_degrees
+	var swing_rotation = original_rotation + Vector3(0, 0, -45)  # Swing animation
+	
+	# Quick swing forward and back
+	tween.tween_property(current_weapon_model, "rotation_degrees", swing_rotation, 0.1)
+	tween.tween_property(current_weapon_model, "rotation_degrees", original_rotation, 0.2)
+
+func calculate_weapon_damage() -> float:
+	if current_weapon_type == "":
+		return attack_damage
+	
+	# Weapon-specific damage multipliers
+	var weapon_multipliers = {
+		"dagger": 0.7,          # Fast but low damage
+		"sword_1handed": 1.0,   # Balanced
+		"sword_2handed": 1.5,   # High damage, slower
+		"axe_1handed": 1.2,     # Good damage
+		"axe_2handed": 1.8,     # Very high damage
+		"staff": 0.8,           # Magic focused, lower physical
+		"wand": 0.6,            # Lowest physical damage
+		"crossbow_1handed": 1.1, # Ranged weapon
+		"crossbow_2handed": 1.4  # High ranged damage
+	}
+	
+	var multiplier = weapon_multipliers.get(current_weapon_type, 1.0)
+	return attack_damage * multiplier
+
+# =======================================
 # EQUIPMENT SYSTEM - CLEAN AND SIMPLE
 # =======================================
 
@@ -707,6 +832,9 @@ func equip_weapon_by_filename(weapon_filename: String):
 	# Position weapon correctly
 	position_weapon(current_weapon_model, weapon_filename)
 	
+	# Update combat stats based on weapon
+	update_weapon_stats(weapon_filename)
+	
 	print("Weapon equipped successfully: ", weapon_filename)
 
 # Unequip current weapon
@@ -716,6 +844,44 @@ func unequip_weapon():
 		current_weapon_model.queue_free()
 		current_weapon_model = null
 		current_weapon_type = ""
+		
+		# Reset to default combat stats
+		attack_range = 3.0
+		attack_cooldown = 1.0
+
+# Update combat stats based on equipped weapon
+func update_weapon_stats(weapon_filename: String):
+	match weapon_filename:
+		"dagger":
+			attack_range = 2.0
+			attack_cooldown = 0.6  # Fast attacks
+		"sword_1handed":
+			attack_range = 2.5
+			attack_cooldown = 1.0  # Balanced
+		"sword_2handed":
+			attack_range = 3.5
+			attack_cooldown = 1.5  # Slower but longer reach
+		"axe_1handed":
+			attack_range = 2.5
+			attack_cooldown = 1.2  # Slightly slower
+		"axe_2handed":
+			attack_range = 3.0
+			attack_cooldown = 1.8  # Very slow but powerful
+		"staff":
+			attack_range = 4.0
+			attack_cooldown = 1.1  # Long reach, magic weapon
+		"wand":
+			attack_range = 3.5
+			attack_cooldown = 0.8  # Fast magic attacks
+		"crossbow_1handed":
+			attack_range = 5.0
+			attack_cooldown = 1.3  # Ranged weapon
+		"crossbow_2handed":
+			attack_range = 6.0
+			attack_cooldown = 1.6  # Long range, slower reload
+		_:
+			attack_range = 3.0
+			attack_cooldown = 1.0
 
 # Position weapon based on type
 func position_weapon(weapon_model: Node3D, weapon_filename: String):

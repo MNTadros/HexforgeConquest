@@ -4,5 +4,6 @@
 
 [node name="EnemySpawner" type="Node3D"]
 script = ExtResource("1_spawner")
-max_enemies = 7
-spawn_interval = 12.0
+max_enemies = 4
+spawn_interval = 25.0
+spawn_radius = 15.0
