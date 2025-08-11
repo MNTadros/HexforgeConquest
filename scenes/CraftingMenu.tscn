@@ -1,0 +1,133 @@
+[gd_scene load_steps=2 format=3 uid="uid://c4uya1ulxx4k5"]
+
+[ext_resource type="Script" path="res://scripts/crafting_menu.gd" id="1_crafting"]
+
+[node name="CraftingMenu" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_crafting")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="CraftingPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -280.0
+offset_right = 400.0
+offset_bottom = 280.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CraftingPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TitleLabel" type="Label" parent="CraftingPanel/VBoxContainer"]
+layout_mode = 2
+text = "⚒️ Blacksmith Workshop - Crafting
+Click buttons to interact | ESC to close"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CraftingPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="MainContainer" type="HBoxContainer" parent="CraftingPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RecipeList" type="VBoxContainer" parent="CraftingPanel/VBoxContainer/MainContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(300, 0)
+
+[node name="RecipeLabel" type="Label" parent="CraftingPanel/VBoxContainer/MainContainer/RecipeList"]
+layout_mode = 2
+text = "Available Recipes:"
+
+[node name="RecipeScrollContainer" type="ScrollContainer" parent="CraftingPanel/VBoxContainer/MainContainer/RecipeList"]
+layout_mode = 2
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 300)
+
+[node name="RecipeContainer" type="VBoxContainer" parent="CraftingPanel/VBoxContainer/MainContainer/RecipeList/RecipeScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VSeparator" type="VSeparator" parent="CraftingPanel/VBoxContainer/MainContainer"]
+layout_mode = 2
+
+[node name="CraftingArea" type="VBoxContainer" parent="CraftingPanel/VBoxContainer/MainContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(350, 0)
+
+[node name="SelectedRecipeLabel" type="Label" parent="CraftingPanel/VBoxContainer/MainContainer/CraftingArea"]
+layout_mode = 2
+text = "Select a recipe to craft"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="HSeparator2" type="HSeparator" parent="CraftingPanel/VBoxContainer/MainContainer/CraftingArea"]
+layout_mode = 2
+
+[node name="RequirementsContainer" type="VBoxContainer" parent="CraftingPanel/VBoxContainer/MainContainer/CraftingArea"]
+layout_mode = 2
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 200)
+
+[node name="RequirementsLabel" type="Label" parent="CraftingPanel/VBoxContainer/MainContainer/CraftingArea/RequirementsContainer"]
+layout_mode = 2
+text = "Requirements:"
+
+[node name="RequirementsScrollContainer" type="ScrollContainer" parent="CraftingPanel/VBoxContainer/MainContainer/CraftingArea/RequirementsContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+custom_minimum_size = Vector2(0, 150)
+
+[node name="RequirementsList" type="VBoxContainer" parent="CraftingPanel/VBoxContainer/MainContainer/CraftingArea/RequirementsContainer/RequirementsScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HSeparator3" type="HSeparator" parent="CraftingPanel/VBoxContainer/MainContainer/CraftingArea"]
+layout_mode = 2
+
+[node name="CraftButton" type="Button" parent="CraftingPanel/VBoxContainer/MainContainer/CraftingArea"]
+layout_mode = 2
+text = "Craft Item"
+disabled = true
+
+[node name="HSeparator4" type="HSeparator" parent="CraftingPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="ButtonContainer" type="HBoxContainer" parent="CraftingPanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="CloseButton" type="Button" parent="CraftingPanel/VBoxContainer/ButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Close"

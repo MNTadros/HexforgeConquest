@@ -11,14 +11,30 @@ extends CharacterBody3D
 
 @export var hud_node_path: NodePath
 
-# Health and stamina variables
-@export var max_health: float = 100.0
-@export var max_stamina: float = 100.0
-var current_health: float = 100.0
-var current_stamina: float = 100.0
-var stamina_regen_rate: float = 15.0
-var stamina_jump_cost: float = 20.0
-var health_regen_rate: float = 2.0
+# Player movement and resource collection
+var max_health = 100.0
+var max_stamina = 100.0
+
+# Current health and stamina values
+var current_health = 100.0
+var current_stamina = 100.0
+
+# Stamina and health costs/regen rates
+var stamina_jump_cost = 20.0
+var stamina_regen_rate = 15.0
+var health_regen_rate = 2.0
+
+# Track for unstuck functionality
+var last_position = Vector3.ZERO
+var unstuck_cooldown = 0.0
+
+# Resource collection cooldowns for manual collection (inventory items)
+var manual_collection_cooldowns = {}
+
+# Collision indicators for blacksmith buildings
+var collision_indicators = []
+var blacksmith_buildings = []
+var collision_visibility_distance = 5.0  # Distance at which collision indicators become visible
 
 # Death and respawn variables
 var is_dead: bool = false
@@ -32,15 +48,19 @@ var hud = null
 
 var pitch := 0.0
 var tile_times: Dictionary = {}
+var tile_collect_cooldown: Dictionary = {}  # Track cooldown timers for manual collection
 var current_tile: String = ""
 
-const MAX_TILE_TIME := 10.0
+const MAX_TILE_TIME := 100.0  # Tile bar currency maxes at 100
+const MANUAL_COLLECT_REQUIREMENT := 6.0  # Manual collection requires 6 seconds
+const MANUAL_COLLECT_COOLDOWN := 6.0  # Cooldown between manual collections
 
 const TILE_TYPES := {
 	"HexTile_Grass": Color(0.3, 0.8, 0.3),
 	"HexTile_Plains": Color(0.8, 0.8, 0.3),
 	"HexTile_Wheat": Color(0.9, 0.7, 0.2),
 	"HexTile_Water": Color(0.2, 0.4, 0.9),
+	"HexTile_BlacksmithBuilding": Color(0.8, 0.4, 0.2),
 }
 
 const TILE_ITEM_ICONS := {
@@ -48,6 +68,7 @@ const TILE_ITEM_ICONS := {
 	"HexTile_Plains": "res://images/icons/plains_icon.png", 
 	"HexTile_Wheat": "res://images/icons/wheat_icon.png",
 	"HexTile_Water": "res://images/icons/water_icon.png",
+	"HexTile_BlacksmithBuilding": "res://images/icons/blacksmith_icon.png",
 }
 
 func _ready():
@@ -61,6 +82,10 @@ func _ready():
 	
 	for tile_type in TILE_TYPES.keys():
 		tile_times[tile_type] = 0.0
+		tile_collect_cooldown[tile_type] = 0.0  # Start with no cooldown
+	
+	# Create red collision visualization for blacksmith buildings
+	create_blacksmith_collision_indicators()
 	
 	var main_scene = get_tree().current_scene
 	if main_scene:
@@ -75,6 +100,22 @@ func _ready():
 func _input(event):
 	if is_dead:
 		return
+	
+	# Check if crafting menu is open - only block player movement, allow UI input
+	if hud != null and hud.crafting_menu != null and hud.crafting_menu.visible:
+		# Block specific player input actions, but allow UI input to pass through
+		if event.is_action_pressed("move_forward") or event.is_action_pressed("move_back") or \
+		   event.is_action_pressed("move_left") or event.is_action_pressed("move_right") or \
+		   event.is_action_pressed("move_backward") or event.is_action_pressed("jump") or \
+		   event.is_action_pressed("unstuck") or event.is_action_pressed("collect_resource") or \
+		   event.is_action_pressed("open_crafting") or \
+		   (event.is_action_pressed("use_item_1") or event.is_action_pressed("use_item_2") or \
+			event.is_action_pressed("use_item_3") or event.is_action_pressed("use_item_4") or \
+			event.is_action_pressed("use_item_5") or event.is_action_pressed("use_item_6")) or \
+		   event is InputEventMouseMotion:
+			return  # Block player actions and mouse look when crafting menu is open
+		# Allow all other input (UI input) to pass through to the crafting menu
+		return
 		
 	if event.is_action_pressed("ui_cancel"):
 		_toggle_pause()
@@ -85,6 +126,15 @@ func _input(event):
 	if event.is_action_pressed("collect_resource"):
 		print("R key pressed - attempting to collect resource")
 		collect_resource_from_current_tile()
+	
+	if event.is_action_pressed("open_crafting"):
+		print("C key pressed - attempting to open crafting")
+		if current_tile == "HexTile_BlacksmithBuilding":
+			if hud != null and hud.has_method("show_crafting_menu"):
+				hud.show_crafting_menu()
+		else:
+			if hud != null and hud.has_method("show_collection_popup"):
+				hud.show_collection_popup("Find a Blacksmith Building to craft!", Color.YELLOW)
 	
 	for i in range(6):
 		if Input.is_action_just_pressed("use_item_" + str(i + 1)):
@@ -109,6 +159,10 @@ func _toggle_pause():
 
 func _physics_process(delta):
 	if get_tree().paused:
+		return
+	
+	# Check if crafting menu is open - if so, don't process movement
+	if hud != null and hud.crafting_menu != null and hud.crafting_menu.visible:
 		return
 	
 	if is_dead:
@@ -151,9 +205,16 @@ func _physics_process(delta):
 				current_tile = tile_name
 				if not tile_times.has(tile_name):
 					tile_times[tile_name] = 0.0
+					tile_collect_cooldown[tile_name] = 0.0
+				
 				tile_times[tile_name] = clamp(tile_times[tile_name] + delta, 0, MAX_TILE_TIME)
 	else:
 		current_tile = ""
+	
+	# Update all tile collection cooldowns
+	for tile_name in tile_collect_cooldown.keys():
+		if tile_collect_cooldown[tile_name] > 0.0:
+			tile_collect_cooldown[tile_name] = max(0.0, tile_collect_cooldown[tile_name] - delta)
 
 	if not is_on_floor():
 		velocity.y -= gravity * delta
@@ -179,6 +240,9 @@ func _physics_process(delta):
 
 	if hud != null:
 		hud.update_tiles(tile_times)
+	
+	# Update collision indicator visibility based on distance
+	update_collision_indicator_visibility()
 
 # Health functions
 func take_damage(amount: float):
@@ -235,32 +299,69 @@ func use_item_from_slot(slot_index: int):
 	if slot_index < len(hud.inventory_slots):
 		var slot_data = hud.inventory_slots[slot_index]
 		if slot_data.item_count > 0:
-			use_item(slot_data.item_type, 1)
+			var item_type = slot_data.item_type
+			
+			# Apply item effects
+			match item_type:
+				"Health Potion":
+					print("Using Health Potion - restoring 50 health")
+					heal(50.0)
+					if hud != null:
+						hud.show_collection_popup("Used Health Potion! (+50 HP)", Color.GREEN)
+				"Stamina Elixir":
+					print("Using Stamina Elixir - restoring 75 stamina")
+					current_stamina = min(max_stamina, current_stamina + 75.0)
+					if hud != null:
+						hud.update_stamina(current_stamina, max_stamina)
+						hud.show_collection_popup("Used Stamina Elixir! (+75 Stamina)", Color.BLUE)
+				_:
+					# Default behavior for other items
+					if hud != null:
+						hud.show_collection_popup("Used " + item_type + "!", Color.YELLOW)
+			
+			# Remove the item from inventory
+			use_item(item_type, 1)
 
 func collect_resource_from_current_tile():
 	print("Collect resource called - Current tile: ", current_tile)
 	
+	# Check if player is actually on a tile
 	if current_tile == "" or hud == null:
 		print("Cannot collect: current_tile is empty or hud is null")
 		if hud != null:
 			hud.show_collection_popup("No tile detected!", Color.RED)
 		return
 	
-	var tile_time = tile_times.get(current_tile, 0.0)
-	print("Tile time for ", current_tile, ": ", tile_time, " / ", MAX_TILE_TIME)
+	# Check if the tile type is valid for collection
+	if not current_tile in TILE_TYPES:
+		print("Cannot collect: invalid tile type")
+		if hud != null:
+			hud.show_collection_popup("Invalid tile!", Color.RED)
+		return
 	
-	var tile_has_resource = tile_time >= MAX_TILE_TIME
+	var tile_time = tile_times.get(current_tile, 0.0)
+	var cooldown_time = tile_collect_cooldown.get(current_tile, 0.0)
+	print("Tile time for ", current_tile, ": ", tile_time, " / ", MAX_TILE_TIME)
+	print("Collection cooldown: ", cooldown_time, "s remaining")
+	
+	# Manual collection requires 6 seconds, regardless of tile bar max (100)
+	var tile_has_resource = tile_time >= MANUAL_COLLECT_REQUIREMENT
+	var cooldown_ready = cooldown_time <= 0.0
+	
 	if not tile_has_resource:
-		print("Cannot collect: tile time not maxed (", tile_time, " < ", MAX_TILE_TIME, ")")
-		var time_remaining = MAX_TILE_TIME - tile_time
+		print("Cannot collect: tile time not enough (", tile_time, " < ", MANUAL_COLLECT_REQUIREMENT, ")")
+		var time_remaining = MANUAL_COLLECT_REQUIREMENT - tile_time
 		if hud != null:
 			hud.show_collection_popup("Still searching... " + str(int(time_remaining)) + "s left", Color.YELLOW)
 		return
 	
-	print("Collecting resource from ", current_tile)
+	if not cooldown_ready:
+		print("Cannot collect: manual collection on cooldown")
+		if hud != null:
+			hud.show_collection_popup("Cooldown active! " + str(int(cooldown_time)) + "s remaining", Color.ORANGE)
+		return
 	
-	# Reset tile time after collection
-	tile_times[current_tile] = 0.0
+	print("Collecting resource from ", current_tile)
 	
 	# Apply tile-specific effects and add items to inventory
 	match current_tile:
@@ -269,8 +370,8 @@ func collect_resource_from_current_tile():
 			print("Collecting grass - removing 20 health")
 			take_damage(20.0)
 			if hud != null:
-				var success = hud.add_item_to_inventory("Grass", TILE_ITEM_ICONS.get("HexTile_Grass", ""), 1)
-				print("Added grass to inventory: ", success)
+				var success = hud.add_item_to_inventory("Grass Item", TILE_ITEM_ICONS.get("HexTile_Grass", ""), 1)
+				print("Added grass item to inventory: ", success)
 				hud.show_collection_popup("Collected Grass! (-20 HP)", Color.GREEN)
 		
 		"HexTile_Plains":
@@ -279,8 +380,8 @@ func collect_resource_from_current_tile():
 			current_stamina = max(0, current_stamina - 30.0)
 			if hud != null:
 				hud.update_stamina(current_stamina, max_stamina)
-				var success = hud.add_item_to_inventory("Plains", TILE_ITEM_ICONS.get("HexTile_Plains", ""), 1)
-				print("Added plains to inventory: ", success)
+				var success = hud.add_item_to_inventory("Plains Item", TILE_ITEM_ICONS.get("HexTile_Plains", ""), 1)
+				print("Added plains item to inventory: ", success)
 				hud.show_collection_popup("Collected Plains! (-30 Stamina)", Color.GREEN)
 		
 		"HexTile_Wheat":
@@ -289,8 +390,8 @@ func collect_resource_from_current_tile():
 			current_stamina = min(max_stamina, current_stamina + 40.0)
 			if hud != null:
 				hud.update_stamina(current_stamina, max_stamina)
-				var success = hud.add_item_to_inventory("Wheat", TILE_ITEM_ICONS.get("HexTile_Wheat", ""), 1)
-				print("Added wheat to inventory: ", success)
+				var success = hud.add_item_to_inventory("Wheat Item", TILE_ITEM_ICONS.get("HexTile_Wheat", ""), 1)
+				print("Added wheat item to inventory: ", success)
 				hud.show_collection_popup("Collected Wheat! (+40 Stamina)", Color.GREEN)
 		
 		"HexTile_Water":
@@ -298,10 +399,122 @@ func collect_resource_from_current_tile():
 			print("Collecting water - restoring 30 health")
 			heal(30.0)
 			if hud != null:
-				var success = hud.add_item_to_inventory("Water", TILE_ITEM_ICONS.get("HexTile_Water", ""), 1)
-				print("Added water to inventory: ", success)
+				var success = hud.add_item_to_inventory("Water Item", TILE_ITEM_ICONS.get("HexTile_Water", ""), 1)
+				print("Added water item to inventory: ", success)
 				hud.show_collection_popup("Collected Water! (+30 HP)", Color.GREEN)
+		
+		"HexTile_BlacksmithBuilding":
+			# Blacksmith Building: Collect iron
+			print("Collecting iron from blacksmith building")
+			if hud != null:
+				var success = hud.add_item_to_inventory("Iron", TILE_ITEM_ICONS.get("HexTile_BlacksmithBuilding", ""), 1)
+				print("Added iron to inventory: ", success)
+				hud.show_collection_popup("Collected Iron! (Press C to craft)", Color.GREEN)
+	
+	# Set cooldown timer for this tile
+	tile_collect_cooldown[current_tile] = MANUAL_COLLECT_COOLDOWN
+	print("Started ", MANUAL_COLLECT_COOLDOWN, "s cooldown for ", current_tile)
 	
 	# Update HUD with new tile times
 	if hud != null:
 		hud.update_tiles(tile_times)
+
+# Function to create red collision visualization for blacksmith buildings
+func create_blacksmith_collision_indicators():
+	# Find all blacksmith building nodes in the scene
+	var buildings = get_tree().get_nodes_in_group("blacksmith_buildings")
+	if buildings.is_empty():
+		# If no group exists, search by name pattern
+		buildings = find_nodes_by_pattern("HexTile_BlacksmithBuilding")
+	
+	for building in buildings:
+		if building is StaticBody3D or building is RigidBody3D or building is CharacterBody3D:
+			blacksmith_buildings.append(building)
+			create_red_collision_indicator(building)
+
+func find_nodes_by_pattern(pattern: String) -> Array:
+	var found_nodes = []
+	# Search through all nodes in the scene
+	_search_nodes_recursive(get_tree().current_scene, pattern, found_nodes)
+	return found_nodes
+
+func _search_nodes_recursive(node: Node, pattern: String, found_nodes: Array):
+	if node.name.contains(pattern):
+		found_nodes.append(node)
+	
+	for child in node.get_children():
+		_search_nodes_recursive(child, pattern, found_nodes)
+
+func create_red_collision_indicator(body_node: Node3D):
+	# Find collision shapes in the body
+	for child in body_node.get_children():
+		if child is CollisionShape3D:
+			var collision_shape = child as CollisionShape3D
+			var shape = collision_shape.shape
+			
+			if shape != null:
+				# Create a MeshInstance3D to visualize the collision
+				var mesh_instance = MeshInstance3D.new()
+				var material = StandardMaterial3D.new()
+				material.albedo_color = Color.RED
+				material.flags_transparent = true
+				material.albedo_color.a = 0.3  # Semi-transparent
+				material.flags_unshaded = true
+				material.no_depth_test = true
+				
+				# Create appropriate mesh based on collision shape type
+				var mesh: Mesh
+				if shape is BoxShape3D:
+					var box_mesh = BoxMesh.new()
+					var box_shape = shape as BoxShape3D
+					box_mesh.size = box_shape.size
+					mesh = box_mesh
+				elif shape is SphereShape3D:
+					var sphere_mesh = SphereMesh.new()
+					var sphere_shape = shape as SphereShape3D
+					sphere_mesh.radius = sphere_shape.radius
+					sphere_mesh.height = sphere_shape.radius * 2
+					mesh = sphere_mesh
+				elif shape is CapsuleShape3D:
+					var capsule_mesh = CapsuleMesh.new()
+					var capsule_shape = shape as CapsuleShape3D
+					capsule_mesh.radius = capsule_shape.radius
+					capsule_mesh.height = capsule_shape.height
+					mesh = capsule_mesh
+				else:
+					# For other shapes, create a simple box
+					var box_mesh = BoxMesh.new()
+					box_mesh.size = Vector3(1, 1, 1)
+					mesh = box_mesh
+				
+				mesh_instance.mesh = mesh
+				mesh_instance.material_override = material
+				mesh_instance.position = collision_shape.position
+				mesh_instance.rotation = collision_shape.rotation
+				mesh_instance.scale = collision_shape.scale
+				
+				# Start invisible - will be shown when player is close
+				mesh_instance.visible = false
+				
+				# Add the red indicator to the body
+				body_node.add_child(mesh_instance)
+				
+				# Store reference to the indicator with its parent building
+				collision_indicators.append({"indicator": mesh_instance, "building": body_node})
+				print("Created red collision indicator for: ", body_node.name)
+
+# Function to update collision indicator visibility based on distance to player
+func update_collision_indicator_visibility():
+	for indicator_data in collision_indicators:
+		var building = indicator_data["building"]
+		var indicator = indicator_data["indicator"]
+		
+		# Check if building and indicator are still valid
+		if not is_instance_valid(building) or not is_instance_valid(indicator):
+			continue
+			
+		# Calculate distance between player and building
+		var distance = global_position.distance_to(building.global_position)
+		
+		# Show indicator if player is close enough, hide if too far
+		indicator.visible = distance <= collision_visibility_distance

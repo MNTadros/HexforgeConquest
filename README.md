@@ -8,7 +8,7 @@
 
 ## 📸 Preview
 
-![Main Menu Demo](images\menu.gif)
+![Main Menu Demo](images/menu.gif)
 
 ## ✨ Features
 

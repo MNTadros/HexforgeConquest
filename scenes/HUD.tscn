@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://52fj4ucfs27o"]
+[gd_scene load_steps=5 format=3 uid="uid://52fj4ucfs27o"]
 
 [ext_resource type="Script" uid="uid://dfwyqq3yt5gnj" path="res://scripts/hud.gd" id="1_fls4u"]
 [ext_resource type="PackedScene" uid="uid://dk5jrtp4usd6u" path="res://scenes/TileBar.tscn" id="2_7hsmw"]
 [ext_resource type="PackedScene" uid="uid://cgchdphv6dtys" path="res://scenes/PauseMenu.tscn" id="4_7hsmw"]
+[ext_resource type="PackedScene" uid="uid://c4uya1ulxx4k5" path="res://scenes/CraftingMenu.tscn" id="5_crafting"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_fls4u")
@@ -30,6 +31,8 @@ grow_horizontal = 0
 grow_vertical = 0
 
 [node name="PauseMenu" parent="." instance=ExtResource("4_7hsmw")]
+
+[node name="CraftingMenu" parent="." instance=ExtResource("5_crafting")]
 
 [node name="PlayerUI" type="Control" parent="."]
 layout_mode = 3
@@ -335,7 +338,8 @@ grow_vertical = 0
 text = "Controls:
 1-6 - Use Items
 U - Unstuck
-R - Collect Resource"
+R - Collect Resource
+C - Craft (on Archery Building)"
 
 [node name="DeathScreen" type="Control" parent="."]
 visible = false

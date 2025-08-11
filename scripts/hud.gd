@@ -4,6 +4,7 @@ extends CanvasLayer
 
 @onready var tile_bar_container = $TileBarContainer
 @onready var pause_menu = $PauseMenu
+@onready var crafting_menu = $CraftingMenu
 @onready var health_bar = $PlayerUI/HealthBar
 @onready var stamina_bar = $PlayerUI/StaminaBar
 @onready var death_screen = $DeathScreen
@@ -28,6 +29,7 @@ func _ready():
 	setup_stamina_bar()
 	setup_inventory_slots()
 	setup_death_screen()
+	setup_crafting_menu()
 
 func setup_health_bar():
 	# Create green style for health bar
@@ -74,6 +76,14 @@ func setup_stamina_bar():
 func setup_death_screen():
 	death_screen.visible = false
 
+func setup_crafting_menu():
+	if crafting_menu != null:
+		# Get player reference - we'll need to set this up when the player is ready
+		var main_scene = get_tree().current_scene
+		if main_scene:
+			var player = main_scene.get_node_or_null("Player")
+			crafting_menu.set_references(self, player)
+
 func setup_inventory_slots():
 	# Style each inventory slot
 	for i in range(inventory_slots.size()):
@@ -106,6 +116,10 @@ func setup_inventory_slots():
 
 func show_pause_menu(show: bool) -> void:
 	pause_menu.visible = show
+
+func show_crafting_menu() -> void:
+	if crafting_menu != null:
+		crafting_menu.show_crafting_menu()
 
 # Health bar functions
 func update_health(current_health: float, max_health: float = 100.0) -> void:
@@ -250,6 +264,9 @@ var tile_bars := {}
 
 const MAX_TILE_TIME := 100.0
 
+# Tiles that shouldn't show progress bars
+const TILES_WITHOUT_BARS := ["HexTile_BlacksmithBuilding"]
+
 func update_tiles(times: Dictionary) -> void:
 	# Ensure nodes are ready before proceeding
 	if tile_bar_container == null:
@@ -259,6 +276,10 @@ func update_tiles(times: Dictionary) -> void:
 	
 	for tile_name in times.keys():
 		var time = times[tile_name]
+		
+		# Skip creating tile bars for certain tiles
+		if tile_name in TILES_WITHOUT_BARS:
+			continue
 
 		if not tile_bars.has(tile_name):
 			var bar = tile_bar_scene.instantiate()
