@@ -77,3 +77,11 @@ addons/kenny_hexagons/
 !Assets/**/*.import
 !addons/kaykit_medieval_hexagon_pack/Assets/**/*.import
 !addons/kenny_hexagons/**/*.import
+
+# KayKit_Adventurers - Exclude sample files and documentation
+addons/KayKit_Adventurers/Samples/
+addons/KayKit_Adventurers/contents.png
+addons/KayKit_Adventurers/contents.png.import
+addons/KayKit_Adventurers/More KayKit Assets.url
+addons/KayKit_Adventurers/Patreon.url
+addons/KayKit_Adventurers/License.txt

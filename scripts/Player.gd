@@ -36,6 +36,10 @@ var collision_indicators = []
 var blacksmith_buildings = []
 var collision_visibility_distance = 5.0  # Distance at which collision indicators become visible
 
+# Equipment System - Clean and Simple
+var current_weapon_model = null  # Currently equipped weapon model
+var current_weapon_type = ""     # Currently equipped weapon filename
+
 # Death and respawn variables
 var is_dead: bool = false
 var respawn_timer: float = 0.0
@@ -97,6 +101,13 @@ func _ready():
 			hud.update_health(current_health, max_health)
 			hud.update_stamina(current_stamina, max_stamina)
 			
+			# Add starting resources for testing (100 of each)
+			hud.add_item_to_inventory("Grass Item", TILE_ITEM_ICONS.get("HexTile_Grass", ""), 100)
+			hud.add_item_to_inventory("Plains Item", TILE_ITEM_ICONS.get("HexTile_Plains", ""), 100)
+			hud.add_item_to_inventory("Wheat Item", TILE_ITEM_ICONS.get("HexTile_Wheat", ""), 100)
+			hud.add_item_to_inventory("Water Item", TILE_ITEM_ICONS.get("HexTile_Water", ""), 100)
+			print("Added 100 of each resource for testing")
+			
 func _input(event):
 	if is_dead:
 		return
@@ -111,7 +122,9 @@ func _input(event):
 		   event.is_action_pressed("open_crafting") or \
 		   (event.is_action_pressed("use_item_1") or event.is_action_pressed("use_item_2") or \
 			event.is_action_pressed("use_item_3") or event.is_action_pressed("use_item_4") or \
-			event.is_action_pressed("use_item_5") or event.is_action_pressed("use_item_6")) or \
+			event.is_action_pressed("use_item_5") or event.is_action_pressed("use_item_6") or \
+			event.is_action_pressed("use_item_7") or event.is_action_pressed("use_item_8") or \
+			event.is_action_pressed("use_item_9")) or \
 		   event is InputEventMouseMotion:
 			return  # Block player actions and mouse look when crafting menu is open
 		# Allow all other input (UI input) to pass through to the crafting menu
@@ -136,7 +149,21 @@ func _input(event):
 			if hud != null and hud.has_method("show_collection_popup"):
 				hud.show_collection_popup("Find a Blacksmith Building to craft!", Color.YELLOW)
 	
-	for i in range(6):
+	if event.is_action_pressed("equip_weapon"):
+		print("T key pressed - equipping first available weapon")
+		equip_first_available_weapon()
+	
+	if event.is_action_pressed("unequip_weapon"):
+		print("Y key pressed - unequipping current weapon")
+		if current_weapon_model != null:
+			unequip_weapon()
+			if hud != null:
+				hud.show_collection_popup("Weapon unequipped!", Color.ORANGE)
+		else:
+			if hud != null:
+				hud.show_collection_popup("No weapon equipped!", Color.YELLOW)
+	
+	for i in range(9):
 		if Input.is_action_just_pressed("use_item_" + str(i + 1)):
 			use_item_from_slot(i)
 	
@@ -293,7 +320,7 @@ func use_item(item_type: String, amount: int = 1) -> bool:
 	return false
 
 func use_item_from_slot(slot_index: int):
-	if hud == null or slot_index < 0 or slot_index >= 6:
+	if hud == null or slot_index < 0 or slot_index >= 9:
 		return
 	
 	if slot_index < len(hud.inventory_slots):
@@ -301,7 +328,12 @@ func use_item_from_slot(slot_index: int):
 		if slot_data.item_count > 0:
 			var item_type = slot_data.item_type
 			
-			# Apply item effects
+			# Check if this is an equipment item that can be equipped/unequipped
+			if is_weapon_type(item_type):
+				toggle_weapon_equipment(item_type)
+				return  # Don't consume equipment items
+			
+			# Apply item effects for consumable items only
 			match item_type:
 				"Health Potion":
 					print("Using Health Potion - restoring 50 health")
@@ -314,12 +346,20 @@ func use_item_from_slot(slot_index: int):
 					if hud != null:
 						hud.update_stamina(current_stamina, max_stamina)
 						hud.show_collection_popup("Used Stamina Elixir! (+75 Stamina)", Color.BLUE)
+				"Wooden Arrow":
+					# Arrows are consumable but don't have an immediate effect
+					if hud != null:
+						hud.show_collection_popup("Used Wooden Arrow! (For ranged combat)", Color.CYAN)
+				"Arrow Bundle":
+					# Arrow bundles are consumable but don't have an immediate effect
+					if hud != null:
+						hud.show_collection_popup("Used Arrow Bundle! (For ranged combat)", Color.CYAN)
 				_:
-					# Default behavior for other items
+					# Default behavior for other consumable items
 					if hud != null:
 						hud.show_collection_popup("Used " + item_type + "!", Color.YELLOW)
 			
-			# Remove the item from inventory
+			# Remove the item from inventory (only for consumables)
 			use_item(item_type, 1)
 
 func collect_resource_from_current_tile():
@@ -518,3 +558,159 @@ func update_collision_indicator_visibility():
 		
 		# Show indicator if player is close enough, hide if too far
 		indicator.visible = distance <= collision_visibility_distance
+
+# =======================================
+# EQUIPMENT SYSTEM - CLEAN AND SIMPLE
+# =======================================
+
+# Weapon type definitions
+const WEAPON_TYPES = [
+	"Dagger", "One-Handed Sword", "Two-Handed Sword", 
+	"One-Handed Axe", "Two-Handed Axe", "Staff", 
+	"Wand", "One-Handed Crossbow", "Two-Handed Crossbow"
+]
+
+const WEAPON_FILE_MAP = {
+	"Dagger": "dagger",
+	"One-Handed Sword": "sword_1handed", 
+	"Two-Handed Sword": "sword_2handed",
+	"One-Handed Axe": "axe_1handed",
+	"Two-Handed Axe": "axe_2handed",
+	"Staff": "staff",
+	"Wand": "wand",
+	"One-Handed Crossbow": "crossbow_1handed",
+	"Two-Handed Crossbow": "crossbow_2handed"
+}
+
+# Check if an item type is a weapon
+func is_weapon_type(item_type: String) -> bool:
+	return item_type in WEAPON_TYPES
+
+# Check if a weapon is available in inventory
+func has_weapon_in_inventory(weapon_type: String) -> bool:
+	if hud == null:
+		return false
+	return hud.get_item_count(weapon_type) > 0
+
+# Get currently equipped weapon type name (empty if none)
+func get_equipped_weapon_type() -> String:
+	if current_weapon_model != null and current_weapon_type != "":
+		return get_weapon_type_from_filename(current_weapon_type)
+	return ""
+
+# Toggle weapon equipment (equip if unequipped, unequip if equipped)
+func toggle_weapon_equipment(weapon_type: String):
+	if not has_weapon_in_inventory(weapon_type):
+		if hud != null:
+			hud.show_collection_popup("Weapon not in inventory!", Color.RED)
+		return
+	
+	var currently_equipped = get_equipped_weapon_type()
+	
+	if currently_equipped == weapon_type:
+		# Same weapon is equipped, unequip it
+		unequip_weapon()
+		if hud != null:
+			hud.show_collection_popup(weapon_type + " unequipped!", Color.ORANGE)
+	else:
+		# Different weapon or no weapon equipped, equip this one
+		equip_weapon_by_type(weapon_type)
+		if hud != null:
+			hud.show_collection_popup(weapon_type + " equipped!", Color.GREEN)
+
+# Equip first available weapon from inventory
+func equip_first_available_weapon():
+	if hud == null:
+		return
+	
+	for weapon_type in WEAPON_TYPES:
+		if has_weapon_in_inventory(weapon_type):
+			equip_weapon_by_type(weapon_type)
+			if hud != null:
+				hud.show_collection_popup(weapon_type + " equipped!", Color.GREEN)
+			return
+	
+	# No weapons found
+	if hud != null:
+		hud.show_collection_popup("No weapons in inventory!", Color.RED)
+
+# Equip weapon by type name
+func equip_weapon_by_type(weapon_type: String):
+	if not weapon_type in WEAPON_FILE_MAP:
+		print("Unknown weapon type: ", weapon_type)
+		return
+	
+	var weapon_filename = WEAPON_FILE_MAP[weapon_type]
+	equip_weapon_by_filename(weapon_filename)
+
+# Equip weapon by filename
+func equip_weapon_by_filename(weapon_filename: String):
+	print("Equipping weapon: ", weapon_filename)
+	
+	# Unequip current weapon first
+	unequip_weapon()
+	
+	# Load and instantiate weapon model
+	var weapon_scene = load("res://addons/KayKit_Adventurers/Assets/gltf/" + weapon_filename + ".gltf")
+	if weapon_scene == null:
+		print("Failed to load weapon scene: ", weapon_filename)
+		return
+	
+	current_weapon_model = weapon_scene.instantiate()
+	current_weapon_type = weapon_filename
+	
+	# Create hand node if needed
+	var hand_node = head.get_node_or_null("RightHand")
+	if hand_node == null:
+		hand_node = Node3D.new()
+		hand_node.name = "RightHand"
+		head.add_child(hand_node)
+		hand_node.position = Vector3(0.6, -0.2, -0.8)
+	
+	# Attach weapon to hand
+	hand_node.add_child(current_weapon_model)
+	
+	# Position weapon correctly
+	position_weapon(current_weapon_model, weapon_filename)
+	
+	print("Weapon equipped successfully: ", weapon_filename)
+
+# Unequip current weapon
+func unequip_weapon():
+	if current_weapon_model != null:
+		print("Unequipping weapon: ", current_weapon_type)
+		current_weapon_model.queue_free()
+		current_weapon_model = null
+		current_weapon_type = ""
+
+# Position weapon based on type
+func position_weapon(weapon_model: Node3D, weapon_filename: String):
+	if "sword" in weapon_filename:
+		weapon_model.position = Vector3(0.2, 0.1, 0.3)
+		weapon_model.rotation_degrees = Vector3(-10, 45, 0)
+	elif "axe" in weapon_filename:
+		weapon_model.position = Vector3(0.2, 0.1, 0.2)
+		weapon_model.rotation_degrees = Vector3(-15, 30, 0)
+	elif "dagger" in weapon_filename:
+		weapon_model.position = Vector3(0.1, 0.05, 0.25)
+		weapon_model.rotation_degrees = Vector3(-5, 60, 0)
+	elif "staff" in weapon_filename:
+		weapon_model.position = Vector3(0.3, 0.2, 0.0)
+		weapon_model.rotation_degrees = Vector3(0, 0, -15)
+	elif "wand" in weapon_filename:
+		weapon_model.position = Vector3(0.15, 0.05, 0.2)
+		weapon_model.rotation_degrees = Vector3(0, 15, 0)
+	elif "crossbow" in weapon_filename:
+		weapon_model.position = Vector3(0.25, 0.15, 0.1)
+		weapon_model.rotation_degrees = Vector3(-5, 25, 0)
+	else:
+		# Default positioning
+		weapon_model.position = Vector3(0.2, 0.1, 0.3)
+		weapon_model.rotation_degrees = Vector3(-10, 45, 0)
+
+# Get weapon type name from filename
+func get_weapon_type_from_filename(filename: String) -> String:
+	for weapon_type in WEAPON_FILE_MAP.keys():
+		if WEAPON_FILE_MAP[weapon_type] == filename:
+			return weapon_type
+	return ""

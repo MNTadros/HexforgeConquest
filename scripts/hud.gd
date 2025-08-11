@@ -14,7 +14,7 @@ extends CanvasLayer
 
 func _ready():
 	# Initialize inventory slots
-	for i in range(1, 7):
+	for i in range(1, 10):
 		var slot = $PlayerUI/InventoryContainer.get_node("Slot" + str(i))
 		inventory_slots.append({
 			"panel": slot,
@@ -102,8 +102,8 @@ func setup_inventory_slots():
 		
 		slot_data.panel.add_theme_stylebox_override("panel", style_box)
 		
-		# Add slot number labels for all 6 slots
-		if i < 6:
+		# Add slot number labels for all 9 slots
+		if i < 9:
 			var slot_number_label = Label.new()
 			slot_number_label.text = str(i + 1)
 			slot_number_label.position = Vector2(2, 2)

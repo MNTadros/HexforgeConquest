@@ -126,13 +126,13 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -150.0
+offset_left = -200.0
 offset_top = -10.0
-offset_right = 150.0
+offset_right = 200.0
 offset_bottom = 40.0
 grow_horizontal = 2
 grow_vertical = 2
-columns = 6
+columns = 9
 
 [node name="Slot1" type="Panel" parent="PlayerUI/InventoryContainer"]
 custom_minimum_size = Vector2(45, 45)
@@ -326,6 +326,102 @@ grow_vertical = 0
 horizontal_alignment = 2
 vertical_alignment = 2
 
+[node name="Slot7" type="Panel" parent="PlayerUI/InventoryContainer"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+
+[node name="ItemIcon7" type="TextureRect" parent="PlayerUI/InventoryContainer/Slot7"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ItemCount7" type="Label" parent="PlayerUI/InventoryContainer/Slot7"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -15.0
+offset_top = -15.0
+grow_horizontal = 0
+grow_vertical = 0
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="Slot8" type="Panel" parent="PlayerUI/InventoryContainer"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+
+[node name="ItemIcon8" type="TextureRect" parent="PlayerUI/InventoryContainer/Slot8"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ItemCount8" type="Label" parent="PlayerUI/InventoryContainer/Slot8"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -15.0
+offset_top = -15.0
+grow_horizontal = 0
+grow_vertical = 0
+horizontal_alignment = 2
+vertical_alignment = 2
+
+[node name="Slot9" type="Panel" parent="PlayerUI/InventoryContainer"]
+custom_minimum_size = Vector2(45, 45)
+layout_mode = 2
+
+[node name="ItemIcon9" type="TextureRect" parent="PlayerUI/InventoryContainer/Slot9"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ItemCount9" type="Label" parent="PlayerUI/InventoryContainer/Slot9"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -15.0
+offset_top = -15.0
+grow_horizontal = 0
+grow_vertical = 0
+horizontal_alignment = 2
+vertical_alignment = 2
+
 [node name="ControlsLabel" type="Label" parent="."]
 anchors_preset = 2
 anchor_top = 1.0
@@ -336,10 +432,12 @@ offset_right = 250.0
 offset_bottom = -10.0
 grow_vertical = 0
 text = "Controls:
-1-6 - Use Items
+1-9 - Use Items
+T - Equip Weapon
+Y - Unequip Weapon
 U - Unstuck
 R - Collect Resource
-C - Craft (on Archery Building)"
+C - Craft (on Blacksmith Building)"
 
 [node name="DeathScreen" type="Control" parent="."]
 visible = false

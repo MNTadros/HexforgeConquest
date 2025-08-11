@@ -13,20 +13,55 @@ var selected_recipe = null
 # Crafting recipes - each recipe has name, requirements, and result
 # Using "Item" versions to separate from tile bar currency
 var recipes = {
-	"Basic Bow": {
-		"description": "A simple wooden bow for hunting",
-		"requirements": {"Plains Item": 2, "Grass Item": 1},
-		"result": {"item": "Basic Bow", "count": 1, "icon": "res://images/icons/bow_icon.png"}
-	},
-	"Wooden Arrow": {
-		"description": "Basic arrows for your bow", 
-		"requirements": {"Grass Item": 2},
-		"result": {"item": "Wooden Arrow", "count": 5, "icon": "res://images/icons/arrow_icon.png"}
-	},
-	"Hunting Knife": {
-		"description": "A sharp knife for cutting and hunting",
+	"Dagger": {
+		"description": "A swift and deadly dagger for close combat",
 		"requirements": {"Plains Item": 1, "Water Item": 1},
-		"result": {"item": "Hunting Knife", "count": 1, "icon": "res://images/icons/knife_icon.png"}
+		"result": {"item": "Dagger", "count": 1, "icon": "res://images/icons/knife_icon.png"}
+	},
+	"One-Handed Sword": {
+		"description": "A balanced sword for versatile combat",
+		"requirements": {"Plains Item": 2, "Grass Item": 1},
+		"result": {"item": "One-Handed Sword", "count": 1, "icon": "res://images/icons/one_handed_sword_icon.png"}
+	},
+	"Two-Handed Sword": {
+		"description": "A massive sword dealing heavy damage",
+		"requirements": {"Plains Item": 3, "Water Item": 2},
+		"result": {"item": "Two-Handed Sword", "count": 1, "icon": "res://images/icons/two_handed_sword_icon.png"}
+	},
+	"One-Handed Axe": {
+		"description": "A sharp axe for chopping and combat",
+		"requirements": {"Plains Item": 2, "Grass Item": 1},
+		"result": {"item": "One-Handed Axe", "count": 1, "icon": "res://images/icons/one_handed_axe_icon.png"}
+	},
+	"Two-Handed Axe": {
+		"description": "A heavy battle axe with devastating power",
+		"requirements": {"Plains Item": 3, "Water Item": 1, "Grass Item": 1},
+		"result": {"item": "Two-Handed Axe", "count": 1, "icon": "res://images/icons/two_handed_axe_icon.png"}
+	},
+	"Staff": {
+		"description": "A magical staff for spellcasting",
+		"requirements": {"Grass Item": 2, "Water Item": 1},
+		"result": {"item": "Staff", "count": 1, "icon": "res://images/icons/staff_icon.png"}
+	},
+	"Wand": {
+		"description": "A small wand for basic magic",
+		"requirements": {"Grass Item": 1, "Water Item": 1},
+		"result": {"item": "Wand", "count": 1, "icon": "res://images/icons/wand_icon.png"}
+	},
+	"One-Handed Crossbow": {
+		"description": "A compact crossbow for ranged combat",
+		"requirements": {"Plains Item": 2, "Grass Item": 2},
+		"result": {"item": "One-Handed Crossbow", "count": 1, "icon": "res://images/icons/one_handed_crossbow_icon.png"}
+	},
+	"Two-Handed Crossbow": {
+		"description": "A powerful crossbow with long range",
+		"requirements": {"Plains Item": 3, "Grass Item": 2, "Water Item": 1},
+		"result": {"item": "Two-Handed Crossbow", "count": 1, "icon": "res://images/icons/two_handed_crossbow_icon.png"}
+	},
+	"Arrow Bundle": {
+		"description": "A bundle of arrows for ranged weapons", 
+		"requirements": {"Grass Item": 2},
+		"result": {"item": "Arrow Bundle", "count": 5, "icon": "res://images/icons/arrow_icon.png"}
 	},
 	"Health Potion": {
 		"description": "Restores 50 health when consumed",
@@ -37,11 +72,6 @@ var recipes = {
 		"description": "Restores 75 stamina when consumed", 
 		"requirements": {"Wheat Item": 2, "Water Item": 1},
 		"result": {"item": "Stamina Elixir", "count": 1, "icon": "res://images/icons/stamina_potion_icon.png"}
-	},
-	"Iron Sword": {
-		"description": "A strong iron sword for combat",
-		"requirements": {"Iron": 3, "Plains Item": 1},
-		"result": {"item": "Iron Sword", "count": 1, "icon": "res://images/icons/sword_icon.png"}
 	}
 }
 
@@ -150,6 +180,11 @@ func _on_craft_button_pressed():
 	if success:
 		if hud.has_method("show_collection_popup"):
 			hud.show_collection_popup("Crafted " + result.item + "!", Color.GREEN)
+		
+		# Trigger equipment update for any weapon that was crafted
+		var weapon_types = ["Dagger", "One-Handed Sword", "Two-Handed Sword", "One-Handed Axe", "Two-Handed Axe", "Staff", "Wand", "One-Handed Crossbow", "Two-Handed Crossbow"]
+		if result.item in weapon_types and player != null and player.has_method("force_equipment_update"):
+			player.force_equipment_update()
 	else:
 		if hud.has_method("show_collection_popup"):
 			hud.show_collection_popup("Inventory full!", Color.RED)
