@@ -30,6 +30,9 @@ offset_bottom = 220.0
 grow_horizontal = 0
 grow_vertical = 0
 
+[node name="CoinsTileBar" parent="TileBarContainer" instance=ExtResource("2_7hsmw")]
+layout_mode = 2
+
 [node name="PauseMenu" parent="." instance=ExtResource("4_7hsmw")]
 
 [node name="CraftingMenu" parent="." instance=ExtResource("5_crafting")]

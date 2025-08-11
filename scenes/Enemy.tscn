@@ -1,0 +1,50 @@
+[gd_scene load_steps=7 format=3 uid="uid://drbyy5om1epip"]
+
+[ext_resource type="Script" uid="uid://cjq2xj8hjvx7x" path="res://scripts/Enemy.gd" id="1_8k9qv"]
+[ext_resource type="PackedScene" uid="uid://1rhoe20o2ihd" path="res://addons/KayKit_Skeletons/characters/gltf/Skeleton_Minion.glb" id="2_skeleton"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_enemy"]
+radius = 0.3
+height = 1.6
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_attack"]
+radius = 1.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_healthbar"]
+size = Vector3(1, 0.1, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_healthbar"]
+albedo_color = Color(0, 1, 0, 1)
+
+[node name="Enemy" type="CharacterBody3D" groups=["enemies"]]
+script = ExtResource("1_8k9qv")
+
+[node name="SkeletonModel" parent="." instance=ExtResource("2_skeleton")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, -1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+shape = SubResource("CapsuleShape3D_enemy")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_desired_distance = 0.5
+path_max_distance = 3.0
+avoidance_enabled = true
+
+[node name="AttackArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("SphereShape3D_attack")
+
+[node name="HealthBar3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.2, 0)
+mesh = SubResource("BoxMesh_healthbar")
+surface_material_override/0 = SubResource("StandardMaterial3D_healthbar")
+
+[node name="AttackTimer" type="Timer" parent="."]
+wait_time = 1.5
+autostart = true
+
+[connection signal="timeout" from="AttackTimer" to="." method="_on_timer_timeout"]

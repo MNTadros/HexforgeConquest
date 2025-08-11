@@ -76,6 +76,9 @@ const TILE_ITEM_ICONS := {
 }
 
 func _ready():
+	# Add player to group for easy detection by enemies
+	add_to_group("player")
+	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	floor_max_angle = deg_to_rad(max_slope_angle)
 	floor_snap_length = floor_snap
@@ -162,6 +165,11 @@ func _input(event):
 		else:
 			if hud != null:
 				hud.show_collection_popup("No weapon equipped!", Color.YELLOW)
+	
+	# Test enemy spawning (F key)
+	if event.is_action_pressed("ui_accept") and Input.is_action_pressed("ui_cancel"):
+		print("F key pressed - spawning test enemy")
+		spawn_test_enemy()
 	
 	for i in range(9):
 		if Input.is_action_just_pressed("use_item_" + str(i + 1)):
@@ -714,3 +722,23 @@ func get_weapon_type_from_filename(filename: String) -> String:
 		if WEAPON_FILE_MAP[weapon_type] == filename:
 			return weapon_type
 	return ""
+
+# Test function to spawn an enemy
+func spawn_test_enemy():
+	var enemy_scene = load("res://scenes/Enemy.tscn")
+	if enemy_scene == null:
+		print("Failed to load enemy scene")
+		if hud != null:
+			hud.show_collection_popup("Failed to load enemy scene!", Color.RED)
+		return
+	
+	var enemy = enemy_scene.instantiate()
+	get_tree().current_scene.add_child(enemy)
+	
+	# Spawn enemy 5 units away from player
+	var spawn_offset = Vector3(5, 0, 5)
+	enemy.global_position = global_position + spawn_offset
+	
+	print("Test enemy spawned at: ", enemy.global_position)
+	if hud != null:
+		hud.show_collection_popup("Enemy spawned nearby!", Color.YELLOW)

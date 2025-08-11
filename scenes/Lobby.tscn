@@ -1,4 +1,4 @@
-[gd_scene load_steps=94 format=3 uid="uid://b1cpuj2a035rv"]
+[gd_scene load_steps=95 format=3 uid="uid://b1cpuj2a035rv"]
 
 [ext_resource type="PackedScene" uid="uid://dj1xxdo2307t7" path="res://Assets/gltf/floor_tile_small_weeds_A.gltf.glb" id="2_evtev"]
 [ext_resource type="PackedScene" uid="uid://dpj5r7atahxrx" path="res://Assets/gltf/wall_arched.gltf.glb" id="3_1mijc"]
@@ -41,6 +41,7 @@
 [ext_resource type="ArrayMesh" uid="uid://bmhg64cgnjguh" path="res://addons/kaykit_medieval_hexagon_pack/Assets/obj/tiles/base/hex_grass_sloped_low.obj" id="35_dx2rk"]
 [ext_resource type="ArrayMesh" uid="uid://cgc7dwx2grf0q" path="res://addons/kaykit_medieval_hexagon_pack/Assets/obj/tiles/base/hex_grass_sloped_high.obj" id="35_noa1g"]
 [ext_resource type="PackedScene" uid="uid://52fj4ucfs27o" path="res://scenes/HUD.tscn" id="40_m28kj"]
+[ext_resource type="PackedScene" uid="uid://bgvtl5rkhtyhk" path="res://scenes/EnemySpawner.tscn" id="41_spawner"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_4arys"]
 size = Vector3(2.78898, 1, 2.74377)
@@ -737,3 +738,6 @@ mesh = ExtResource("35_dx2rk")
 shape = SubResource("ConvexPolygonShape3D_vd83n")
 
 [node name="HUD" parent="." instance=ExtResource("40_m28kj")]
+
+[node name="EnemySpawner" parent="." instance=ExtResource("41_spawner")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)

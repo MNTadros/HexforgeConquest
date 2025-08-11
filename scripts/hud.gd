@@ -3,6 +3,7 @@ extends CanvasLayer
 @export var tile_bar_scene: PackedScene
 
 @onready var tile_bar_container = $TileBarContainer
+@onready var coins_tile_bar = $TileBarContainer/CoinsTileBar
 @onready var pause_menu = $PauseMenu
 @onready var crafting_menu = $CraftingMenu
 @onready var health_bar = $PlayerUI/HealthBar
@@ -30,6 +31,7 @@ func _ready():
 	setup_inventory_slots()
 	setup_death_screen()
 	setup_crafting_menu()
+	setup_coins_tile_bar()
 
 func setup_health_bar():
 	# Create green style for health bar
@@ -83,6 +85,39 @@ func setup_crafting_menu():
 		if main_scene:
 			var player = main_scene.get_node_or_null("Player")
 			crafting_menu.set_references(self, player)
+
+func setup_coins_tile_bar():
+	if coins_tile_bar != null:
+		# Set up the coins tile bar with golden appearance
+		coins_tile_bar.setup_tile("Coins", 0, 999999)  # Max coins set to 999999
+		
+		# Set coins icon
+		var icon_node = coins_tile_bar.get_node("HBoxContainer/Icon")
+		if icon_node:
+			var coins_texture = load("res://images/icons/coins_icon.png")
+			icon_node.texture = coins_texture
+		
+		# Set golden color for the progress bar background
+		var value_bg = coins_tile_bar.get_node("HBoxContainer/ValueBackground")
+		if value_bg:
+			var gold_style = StyleBoxFlat.new()
+			gold_style.bg_color = Color(1.0, 0.84, 0.0, 0.3)  # Golden color with transparency
+			gold_style.corner_radius_top_left = 6
+			gold_style.corner_radius_top_right = 6
+			gold_style.corner_radius_bottom_right = 6
+			gold_style.corner_radius_bottom_left = 6
+			value_bg.add_theme_stylebox_override("panel", gold_style)
+		
+		# Set golden text color
+		var value_label = coins_tile_bar.get_node("HBoxContainer/ValueBackground/ValueLabel")
+		if value_label:
+			value_label.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0))  # Golden text
+		
+		# Set the label text to "Coins"
+		var label_node = coins_tile_bar.get_node("HBoxContainer/Label")
+		if label_node:
+			label_node.text = "Coins"
+			label_node.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0))  # Golden text
 
 func setup_inventory_slots():
 	# Style each inventory slot
